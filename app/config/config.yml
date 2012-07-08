@@ -56,6 +56,11 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        mappings:
+            ExampleUserRegistrationBundle:
+                type: annotation
+                dir: Domain/Data
+                prefix: Example\UserRegistrationBundle\Domain\Data
 
 # Swiftmailer Configuration
 swiftmailer:
