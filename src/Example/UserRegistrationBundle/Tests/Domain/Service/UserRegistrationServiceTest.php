@@ -34,11 +34,9 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Data\Repository;
+namespace Example\UserRegistrationBundle\Tests\Domain\Service;
 
-use Doctrine\ORM\EntityRepository;
-
-use Example\UserRegistrationBundle\Domain\Data\User;
+use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -46,14 +44,28 @@ use Example\UserRegistrationBundle\Domain\Data\User;
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @since      Class available since Release 1.0.0
  */
-class UserRepository extends EntityRepository
+class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param \Example\UserRegistrationBundle\Domain\Data\User $user
+     * @test
      */
-    public function register(User $user)
+    public function ユーザーを登録する()
     {
-        $this->getEntityManager()->persist($user);
+        $userClass = 'Example\UserRegistrationBundle\Domain\Data\User';
+        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository');
+        $user = \Phake::mock($userClass);
+        $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
+        \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $userRegistrationService = new UserRegistrationService();
+        $userRegistrationService->setEntityManager($entityManager);
+        $userRegistrationService->register($user);
+
+        \Phake::verify($user)->setActivationKey(\Phake::capture($activationKey));
+        $this->assertThat(strlen($activationKey), $this->greaterThan(0));
+
+        \Phake::verify($user)->setRegistrationDate($this->isInstanceOf('DateTime'));
+        \Phake::verify($userRepository)->register($this->anything());
+        \Phake::verify($entityManager)->flush();
     }
 }
 

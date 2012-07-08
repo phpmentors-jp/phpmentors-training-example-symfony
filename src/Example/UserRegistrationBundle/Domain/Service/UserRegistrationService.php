@@ -34,9 +34,9 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Data\Repository;
+namespace Example\UserRegistrationBundle\Domain\Service;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 
 use Example\UserRegistrationBundle\Domain\Data\User;
 
@@ -46,14 +46,46 @@ use Example\UserRegistrationBundle\Domain\Data\User;
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @since      Class available since Release 1.0.0
  */
-class UserRepository extends EntityRepository
+class UserRegistrationService
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     */
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param \Example\UserRegistrationBundle\Domain\Data\User $user
      */
     public function register(User $user)
     {
-        $this->getEntityManager()->persist($user);
+        $user->setActivationKey($this->generateActivationKey());
+        $user->setRegistrationDate(new \DateTime());
+
+        $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->register($user);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @return string
+     * @throws \UnexpectedValueException
+     * @see \Symfony\Component\Security\Http\RememberMe::generateRandomValue()
+     */
+    protected function generateActivationKey()
+    {
+        $bytes = openssl_random_pseudo_bytes(24, $strong);
+        if ($strong === true && $bytes !== false) {
+            return base64_encode($bytes);
+        } else {
+            throw new \UnexpectedValueException('アクティベーションキーの生成に失敗しました。');
+        }
     }
 }
 

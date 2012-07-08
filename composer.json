@@ -6,6 +6,7 @@
     },
     "require": {
         "php": ">=5.3.3",
+        "ext-openssl": "*",
         "symfony/symfony": "2.1.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "doctrine/doctrine-bundle": "1.0.*",
