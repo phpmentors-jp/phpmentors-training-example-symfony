@@ -40,6 +40,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
+use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
 use Example\UserRegistrationBundle\Domain\Data\User;
 
 /**
@@ -66,19 +67,27 @@ class UserRegistrationService
     protected $secureRandom;
 
     /**
+     * @var \Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer
+     */
+    protected $userTransfer;
+
+    /**
      * @param \Doctrine\ORM\EntityManager $entityManager
      * @param \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $passwordEncoder
      * @param \Symfony\Component\Security\Core\Util\SecureRandomInterface $secureRandom
+     * @param \Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer $userTransfer
      */
-    public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom)
+    public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom, UserTransfer $userTransfer)
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->secureRandom = $secureRandom;
+        $this->userTransfer = $userTransfer;
     }
 
     /**
      * @param \Example\UserRegistrationBundle\Domain\Data\User $user
+     * @throws \UnexpectedValueException
      */
     public function register(User $user)
     {
@@ -88,6 +97,11 @@ class UserRegistrationService
 
         $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->add($user);
         $this->entityManager->flush();
+
+        $emailSent = $this->userTransfer->sendActivationEmail($user);
+        if (!$emailSent) {
+            throw new \UnexpectedValueException('アクティベーションメールの送信に失敗しました。');
+        }
     }
 }
 

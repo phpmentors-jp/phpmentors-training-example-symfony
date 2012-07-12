@@ -66,7 +66,10 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $secureRandom = \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
         \Phake::when($secureRandom)->nextBytes($this->anything())->thenReturn($activationKey);
 
-        $userRegistrationService = new UserRegistrationService($entityManager, $passwordEncoder, $secureRandom);
+        $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer');
+        \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(true);
+
+        $userRegistrationService = new UserRegistrationService($entityManager, $passwordEncoder, $secureRandom, $userTransfer);
         $userRegistrationService->register($user);
 
         \Phake::verify($secureRandom)->nextBytes($this->anything());
@@ -76,6 +79,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($user)->setRegistrationDate($this->isInstanceOf('DateTime'));
         \Phake::verify($userRepository)->add($this->anything());
         \Phake::verify($entityManager)->flush();
+        \Phake::verify($userTransfer)->sendActivationEmail($this->anything());
     }
 }
 
@@ -85,7 +89,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
  * coding: utf-8
  * tab-width: 4
  * c-basic-offset: 4
- * c-hanging-comment-ender-p: nil
  * indent-tabs-mode: nil
  * End:
  */
