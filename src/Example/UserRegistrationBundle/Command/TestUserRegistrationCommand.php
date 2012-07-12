@@ -41,6 +41,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Example\UserRegistrationBundle\Domain\Data\Factory\UserFactory;
+use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
 use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
 
 /**
@@ -59,6 +60,11 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $userTransfer = new UserTransfer();
+        $userTransfer->setMailer($this->getContainer()->get('mailer'));
+        $userTransfer->setMessageFactory(new \Swift_Message());
+        $userTransfer->setTemplateLoader($this->getContainer()->get('twig'));
+
         $userFactory = new UserFactory();
         $user = $userFactory->create();
         $user->setLastName('久保');
@@ -68,6 +74,7 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
 
         $userRegistrationService = new UserRegistrationService();
         $userRegistrationService->setEntityManager($this->getContainer()->get('doctrine')->getEntityManager());
+        $userRegistrationService->setUserTransfer($userTransfer);
         $userRegistrationService->register($user);
 
         return 0;
