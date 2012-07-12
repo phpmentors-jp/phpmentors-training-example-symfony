@@ -53,11 +53,15 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
     {
         $userClass = 'Example\UserRegistrationBundle\Domain\Data\User';
         $userRepository = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository');
-        $user = \Phake::mock($userClass);
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer');
+        \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(1);
+        $user = \Phake::mock($userClass);
+
         $userRegistrationService = new UserRegistrationService();
         $userRegistrationService->setEntityManager($entityManager);
+        $userRegistrationService->setUserTransfer($userTransfer);
         $userRegistrationService->register($user);
 
         \Phake::verify($user)->setActivationKey(\Phake::capture($activationKey));
@@ -66,6 +70,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($user)->setRegistrationDate($this->isInstanceOf('DateTime'));
         \Phake::verify($userRepository)->register($this->anything());
         \Phake::verify($entityManager)->flush();
+        \Phake::verify($userTransfer)->sendActivationEmail($this->anything());
     }
 }
 
