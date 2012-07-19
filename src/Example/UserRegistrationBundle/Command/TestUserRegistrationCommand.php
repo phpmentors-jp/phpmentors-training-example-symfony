@@ -77,6 +77,9 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
         $userRegistrationService->setUserTransfer($userTransfer);
         $userRegistrationService->register($user);
 
+        $this->getContainer()->get('doctrine')->getEntityManager()->detach($user);
+        $userRegistrationService->activate($user->getActivationKey());
+
         return 0;
     }
 }
