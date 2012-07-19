@@ -94,6 +94,24 @@ class UserRegistrationService
     }
 
     /**
+     * @param string $activationKey
+     */
+    public function activate($activationKey)
+    {
+        $user = $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->findByActivationKey($activationKey);
+        if (is_null($user)) {
+            throw new \UnexpectedValueException('アクティベーションキーが見つかりません。');
+        }
+
+        if (!is_null($user->getActivationDate())) {
+            throw new \UnexpectedValueException('ユーザーはすでに有効です。');
+        }
+
+        $user->setActivationDate(new \DateTime());
+        $this->entityManager->flush();
+    }
+
+    /**
      * @return string
      * @throws \UnexpectedValueException
      * @see \Symfony\Component\Security\Http\RememberMe::generateRandomValue()
