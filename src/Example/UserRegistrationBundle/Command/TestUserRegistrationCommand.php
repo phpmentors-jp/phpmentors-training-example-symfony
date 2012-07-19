@@ -79,6 +79,9 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
         );
         $userRegistrationService->register($user);
 
+        $this->getContainer()->get('doctrine')->getManager()->detach($user);
+        $userRegistrationService->activate($user->getActivationKey());
+
         return 0;
     }
 }
