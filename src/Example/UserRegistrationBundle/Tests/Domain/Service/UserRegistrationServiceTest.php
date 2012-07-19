@@ -36,6 +36,7 @@
 
 namespace Example\UserRegistrationBundle\Tests\Domain\Service;
 
+use Example\UserRegistrationBundle\Domain\Data\User;
 use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
 
 /**
@@ -80,6 +81,33 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($userRepository)->add($this->anything());
         \Phake::verify($entityManager)->flush();
         \Phake::verify($userTransfer)->sendActivationEmail($this->anything());
+    }
+
+    /**
+     * @test
+     */
+    public function ユーザーを有効にする()
+    {
+        $user = new User();
+        $userClass = get_class($user);
+        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository');
+        \Phake::when($userRepository)->findOneByActivationKey('activation_key')->thenReturn($user);
+        $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
+        \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+
+        $userRegistrationService = new UserRegistrationService(
+            $entityManager,
+            \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'),
+            \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'),
+            \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer')
+        );
+        $userRegistrationService->activate('activation_key');
+
+        $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
+        $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));
+
+        \Phake::verify($userRepository)->findOneByActivationKey('activation_key');
+        \Phake::verify($entityManager)->flush();
     }
 }
 

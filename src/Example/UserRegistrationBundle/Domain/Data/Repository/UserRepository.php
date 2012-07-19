@@ -55,6 +55,17 @@ class UserRepository extends EntityRepository
     {
         $this->getEntityManager()->persist($user);
     }
+
+    /**
+     * @param string $activationKey
+     * @return \Example\UserRegistrationBundle\Domain\Data\User
+     */
+    public function findOneByActivationKey($activationKey)
+    {
+        $users = $this->findBy(array('activationKey' => $activationKey));
+        if (count($users) == 0) return null;
+        return $users[0];
+    }
 }
 
 /*
