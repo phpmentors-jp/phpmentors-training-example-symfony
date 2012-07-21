@@ -31,12 +31,14 @@
 {% block content %}
   <h2>登録内容のご確認</h2>
 
-  <div>
+  <div class="well">
     <form action="{{ path('example_userregistration_userregistration_confirmationpost') }}" method="post" {{ form_enctype(form) }}>
       {{ form_widget(form) }}
 
-      <input type="submit" name="prev" value="修正する" />
-      <input type="submit" name="next" value="登録する" />
+      <div class="form-actions">
+        <button type="submit" class="btn" name="prev"><b>修正する</b></button>
+        <button type="submit" class="btn btn-primary" name="next"><b>登録する</b></button>
+      </div>
     </form>
   </div>
 {% endblock %}
