@@ -24,15 +24,24 @@
  # POSSIBILITY OF SUCH DAMAGE.
  #}
 
-{% extends "ExampleUserRegistrationBundle:UserRegistration:layout.html.twig" %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <title>Example ユーザー登録{% block title %}: {% endblock %}</title>
+  </head>
+  <body>
+    <h1>Example ユーザー登録</h1>
 
-{% block title %}{{ parent() }}登録完了{% endblock %}
-
-{% block content %}
-  <h2>登録完了</h2>
-
-  <p>ユーザー登録が完了いたしました。ユーザーアカウントの有効化手続きのご案内についてメールを送信いたします。</p>
-{% endblock %}
+    <div>
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>
 
 {#
  # Local Variables:
