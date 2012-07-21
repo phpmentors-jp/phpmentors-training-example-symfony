@@ -16,9 +16,12 @@
 {% block content %}
 <h2>ユーザー情報のご入力</h2>
 
-<div>
+<div class="well">
   {{ form_start(form) }}
-  {{ form_widget(form) }}
+  {{ form_errors(form) }}
+  <div class="form-actions">
+    {{ form_widget(form.next, {'attr': {'class': 'btn btn-primary'}}) }}
+  </div>
   {{ form_end(form) }}
 </div>
 {% endblock %}

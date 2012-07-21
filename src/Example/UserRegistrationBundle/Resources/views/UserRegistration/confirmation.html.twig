@@ -16,9 +16,13 @@
 {% block content %}
 <h2>登録内容のご確認</h2>
 
-<div>
+<div class="well">
   {{ form_start(form) }}
-  {{ form_widget(form) }}
+  {{ form_errors(form) }}
+  <div class="form-actions">
+    {{ form_widget(form.prev, {'attr': {'class': 'btn'}}) }}
+    {{ form_widget(form.next, {'attr': {'class': 'btn btn-primary'}}) }}
+  </div>
   {{ form_end(form) }}
 </div>
 {% endblock %}
