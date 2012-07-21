@@ -36,9 +36,9 @@
 
 namespace Example\UserRegistrationBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -49,12 +49,72 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class UserRegistrationController extends Controller
 {
     /**
-     * @Route("/hello/{name}")
-     * @Template()
+     * @Route("/users/registration/")
+     * @Method("GET")
      */
-    public function indexAction($name)
+    public function inputAction()
     {
-        return array('name' => $name);
+        return $this->render('ExampleUserRegistrationBundle:UserRegistration:registration_input.html.twig', array(
+            'form' => $this->createFormBuilder()->getForm()->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/users/registration/")
+     * @Method("POST")
+     */
+    public function inputPostAction()
+    {
+        $form = $this->createFormBuilder()->getForm();
+        $form->bind($this->getRequest());
+        if ($form->isValid()) {
+            return $this->redirect($this->generateUrl('example_userregistration_userregistration_confirmation', array(), true));
+        } else {
+            return $this->render('ExampleUserRegistrationBundle:UserRegistration:registration_input.html.twig', array(
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @Route("/users/registration/confirmation")
+     * @Method("GET")
+     */
+    public function confirmationAction()
+    {
+        return $this->render('ExampleUserRegistrationBundle:UserRegistration:registration_confirmation.html.twig', array(
+            'form' => $this->createFormBuilder()->getForm()->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/users/registration/confirmation")
+     * @Method("POST")
+     */
+    public function confirmationPostAction()
+    {
+        $form = $this->createFormBuilder()->getForm();
+        $form->bind($this->getRequest());
+        if ($form->isValid()) {
+            if ($this->getRequest()->request->has('prev')) {
+                return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
+            }
+
+            return $this->redirect($this->generateUrl('example_userregistration_userregistration_success', array(), true));
+        } else {
+            return $this->render('ExampleUserRegistrationBundle:UserRegistration:registration_confirmation.html.twig', array(
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @Route("/users/registration/success")
+     * @Method("GET")
+     */
+    public function successAction()
+    {
+        return $this->render('ExampleUserRegistrationBundle:UserRegistration:registration_success.html.twig');
     }
 }
 
