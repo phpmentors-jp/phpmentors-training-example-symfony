@@ -1,4 +1,4 @@
-# Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+# Copyright (c) 2012, 2014 KUBO Atsuhiro <kubo@iteman.jp>,
 # All rights reserved.
 #
 # This file is part of PHPMentors_Training_Example_Symfony.
@@ -8,5 +8,16 @@
 # distribution, and is available at http://opensource.org/licenses/BSD-2-Clause
 
 parameters:
+    # Classes
+    example_user_registration.user_registration_controller.class: "Example\\UserRegistrationBundle\\Controller\\UserRegistrationController"
+
+    # Configuration Parameters
 
 services:
+    example_user_registration.user_registration_controller:
+        class: "%example_user_registration.user_registration_controller.class%"
+        calls:
+            - [setContainer, ["@service_container"]]
+            - [setConversationContext, ["@phpmentors_pageflower.conversation_context"]]
+        tags:
+            - { name: phpmentors_pageflower.pageflow }
