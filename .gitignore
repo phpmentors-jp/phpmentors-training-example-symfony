@@ -1,5 +1,5 @@
-web/bundles/
-app/bootstrap.php.cache
-build/
-vendor
-composer.phar
+/web/bundles/
+/app/bootstrap.php.cache
+/build/
+/vendor/
+/composer.phar
