@@ -40,6 +40,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
+
 /**
  * @package    PHPMentors_Training_Example_Symfony
  * @copyright  2012 KUBO Atsuhiro <kubo@iteman.jp>
@@ -60,7 +62,19 @@ class UserActivationController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $this->createUserRegistrationService()->activate($this->getRequest()->query->get('key'));
         return $this->render('ExampleUserRegistrationBundle:UserRegistration:activation_success.html.twig');
+    }
+
+    /**
+     * @return \Example\UserRegistrationBundle\Domain\Service\UserRegistrationService
+     */
+    protected function createUserRegistrationService()
+    {
+        $userRegistrationService = new UserRegistrationService();
+        $userRegistrationService->setEntityManager($this->get('doctrine')->getEntityManager());
+
+        return $userRegistrationService;
     }
 }
 
