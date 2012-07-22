@@ -38,6 +38,7 @@ namespace Example\UserRegistrationBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -65,6 +66,15 @@ class UserRegistrationType extends AbstractType
     public function getName()
     {
         return 'userregistration';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        parent::setDefaultOptions($resolver);
+
+        $resolver->setDefaults(array(
+            'validation_groups' => array('registration'),
+        ));
     }
 }
 
