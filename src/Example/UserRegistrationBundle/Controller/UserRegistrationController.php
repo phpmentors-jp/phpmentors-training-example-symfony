@@ -15,9 +15,11 @@ namespace Example\UserRegistrationBundle\Controller;
 
 use PHPMentors\PageflowerBundle\Annotation\Accept;
 use PHPMentors\PageflowerBundle\Annotation\EndPage;
+use PHPMentors\PageflowerBundle\Annotation\Init;
 use PHPMentors\PageflowerBundle\Annotation\Page;
 use PHPMentors\PageflowerBundle\Annotation\Pageflow;
 use PHPMentors\PageflowerBundle\Annotation\StartPage;
+use PHPMentors\PageflowerBundle\Annotation\Stateful;
 use PHPMentors\PageflowerBundle\Annotation\Transition;
 use PHPMentors\PageflowerBundle\Controller\ConversationalControllerInterface;
 use PHPMentors\PageflowerBundle\Conversation\ConversationContext;
@@ -26,6 +28,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
+use Example\UserRegistrationBundle\Entity\User;
+use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
 
 /**
  * @Route("/users/registration", service="example_user_registration.user_registration_controller")
@@ -52,11 +57,26 @@ class UserRegistrationController extends Controller implements ConversationalCon
     private $conversationContext;
 
     /**
+     * @var User
+     *
+     * @Stateful
+     */
+    private $user;
+
+    /**
      * {@inheritDoc}
      */
     public function setConversationContext(ConversationContext $conversationContext)
     {
         $this->conversationContext = $conversationContext;
+    }
+
+    /**
+     * @Init
+     */
+    public function initialize()
+    {
+        $this->user = new User();
     }
 
     /**
@@ -73,9 +93,7 @@ class UserRegistrationController extends Controller implements ConversationalCon
             $this->conversationContext->getConversation()->transition('input');
         }
 
-        $form = $this->createFormBuilder(null, array('action' => $this->generateUrl('example_userregistration_userregistration_inputpost'), 'method' => 'POST'))
-            ->add('next', 'submit', array('label' => '次へ'))
-            ->getForm();
+        $form = $this->createForm(new UserRegistrationType(), $this->user, array('action' => $this->generateUrl('example_userregistration_userregistration_inputpost'), 'method' => 'POST'));
 
         return $this->render(self::VIEW_INPUT, array(
             'form' => $form->createView(),
@@ -97,9 +115,7 @@ class UserRegistrationController extends Controller implements ConversationalCon
             $this->conversationContext->getConversation()->transition('input');
         }
 
-        $form = $this->createFormBuilder(null, array('action' => $this->generateUrl('example_userregistration_userregistration_inputpost'), 'method' => 'POST'))
-            ->add('next', 'submit', array('label' => '次へ'))
-            ->getForm();
+        $form = $this->createForm(new UserRegistrationType(), $this->user, array('action' => $this->generateUrl('example_userregistration_userregistration_inputpost'), 'method' => 'POST'));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -129,6 +145,7 @@ class UserRegistrationController extends Controller implements ConversationalCon
 
         return $this->render(self::VIEW_CONFIRMATION, array(
             'form' => $form->createView(),
+            'user' => $this->user,
         ));
     }
 
