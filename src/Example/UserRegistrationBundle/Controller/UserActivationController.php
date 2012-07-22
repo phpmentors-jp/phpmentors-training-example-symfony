@@ -4,7 +4,7 @@
 /**
  * PHP version 5.3
  *
- * Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    PHPMentors_Training_Example_Symfony
- * @copyright  2012 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2012-2013 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      File available since Release 1.0.0
  */
@@ -40,9 +40,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
+
 /**
  * @package    PHPMentors_Training_Example_Symfony
- * @copyright  2012 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2012-2013 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
@@ -66,7 +69,22 @@ class UserActivationController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $this->createUserRegistrationService()->activate($this->getRequest()->query->get('key'));
+
         return $this->render(self::$VIEW_SUCCESS);
+    }
+
+    /**
+     * @return \Example\UserRegistrationBundle\Domain\Service\UserRegistrationService
+     */
+    protected function createUserRegistrationService()
+    {
+        return new UserRegistrationService(
+            $this->get('doctrine')->getEntityManager(),
+            $this->get('security.encoder_factory')->getEncoder('Example\UserRegistrationBundle\Domain\Data\User'),
+            $this->get('security.secure_random'),
+            new UserTransfer($this->get('mailer'), new \Swift_Message(), $this->get('twig'))
+        );
     }
 }
 
