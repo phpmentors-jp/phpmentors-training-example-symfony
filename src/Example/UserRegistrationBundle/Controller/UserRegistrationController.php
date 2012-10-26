@@ -41,8 +41,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Example\UserRegistrationBundle\Domain\Data\Factory\UserFactory;
-use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
 use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
 
 /**
@@ -114,7 +112,7 @@ class UserRegistrationController extends Controller
                 return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
             }
 
-            $this->createUserRegistrationService()->register($this->get('session')->get('user'));
+            $this->get('example_user_registration.user_registration_service')->register($this->get('session')->get('user'));
 
             $this->get('session')->remove('user');
             return $this->redirect($this->generateUrl('example_userregistration_userregistration_success', array(), true));
@@ -132,19 +130,6 @@ class UserRegistrationController extends Controller
     public function successAction()
     {
         return $this->render('ExampleUserRegistrationBundle:UserRegistration:registration_success.html.twig');
-    }
-
-    /**
-     * @return \Example\UserRegistrationBundle\Domain\Service\UserRegistrationService
-     */
-    protected function createUserRegistrationService()
-    {
-        return new UserRegistrationService(
-            $this->get('doctrine')->getEntityManager(),
-            $this->get('security.encoder_factory')->getEncoder('Example\UserRegistrationBundle\Domain\Data\User'),
-            $this->get('security.secure_random'),
-            new UserTransfer($this->get('mailer'), new \Swift_Message(), $this->get('twig'))
-        );
     }
 }
 
