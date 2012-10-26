@@ -41,8 +41,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Example\UserRegistrationBundle\Domain\Data\Factory\UserFactory;
-use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -67,16 +65,7 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
         $user->setEmail('foo@iteman.jp');
         $user->setPassword('password');
 
-        $userRegistrationService = new UserRegistrationService(
-            $this->getContainer()->get('doctrine')->getEntityManager(),
-            $this->getContainer()->get('security.encoder_factory')->getEncoder($user),
-            $this->getContainer()->get('security.secure_random'),
-            new UserTransfer(
-                $this->getContainer()->get('mailer'),
-                new \Swift_Message(),
-                $this->getContainer()->get('twig')
-            )
-        );
+        $userRegistrationService = $this->getContainer()->get('example_user_registration.user_registration_service');
         $userRegistrationService->register($user);
 
         $this->getContainer()->get('doctrine')->getManager()->detach($user);
