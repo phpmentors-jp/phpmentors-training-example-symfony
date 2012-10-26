@@ -23,8 +23,29 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 parameters:
+  example_user_registration.user_registration_service.class: "Example\\UserRegistrationBundle\\Domain\\Service\\UserRegistrationService"
+  example_user_registration.user_transfer.class: "Example\\UserRegistrationBundle\\Domain\\Data\\Transfer\\UserTransfer"
+  example_user_registration.swift_message.class: "Swift_Message"
 
 services:
+  example_user_registration.entity_manager:
+    synthetic: true
+
+  example_user_registration.user_registration_service:
+    class: "%example_user_registration.user_registration_service.class%"
+    calls:
+      - [ setEntityManager, [ "@example_user_registration.entity_manager" ] ]
+      - [ setUserTransfer, [ "@example_user_registration.user_transfer" ] ]
+
+  example_user_registration.user_transfer:
+    class: "%example_user_registration.user_transfer.class%"
+    calls:
+      - [ setMailer, [ "@mailer" ] ]
+      - [ setMessageFactory, [ "@example_user_registration.swift_message" ] ]
+      - [ setTemplateLoader, [ "@twig" ] ]
+
+  example_user_registration.swift_message:
+    class: "%example_user_registration.swift_message.class%"
 
 # Local Variables:
 # mode: conf

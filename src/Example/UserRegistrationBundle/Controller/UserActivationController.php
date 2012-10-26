@@ -62,19 +62,8 @@ class UserActivationController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $this->createUserRegistrationService()->activate($this->getRequest()->query->get('key'));
+        $this->get('example_user_registration.user_registration_service')->activate($this->getRequest()->query->get('key'));
         return $this->render('ExampleUserRegistrationBundle:UserRegistration:activation_success.html.twig');
-    }
-
-    /**
-     * @return \Example\UserRegistrationBundle\Domain\Service\UserRegistrationService
-     */
-    protected function createUserRegistrationService()
-    {
-        $userRegistrationService = new UserRegistrationService();
-        $userRegistrationService->setEntityManager($this->get('doctrine')->getEntityManager());
-
-        return $userRegistrationService;
     }
 }
 
