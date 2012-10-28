@@ -38,6 +38,7 @@ namespace Example\UserRegistrationBundle\Tests\Domain\Service;
 
 use Example\UserRegistrationBundle\Domain\Data\User;
 use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
+use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -45,7 +46,7 @@ use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @since      Class available since Release 1.0.0
  */
-class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
+class UserRegistrationServiceTest extends ComponentAwareTestCase
 {
     /**
      * @test
@@ -53,17 +54,18 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
     public function ユーザーを登録する()
     {
         $userClass = 'Example\UserRegistrationBundle\Domain\Data\User';
+
         $userRepository = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository');
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
+
         $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer');
         \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(1);
-        $user = \Phake::mock($userClass);
+        $this->setComponent('example_user_registration.user_transfer', $userTransfer);
 
-        $userRegistrationService = new UserRegistrationService();
-        $userRegistrationService->setEntityManager($entityManager);
-        $userRegistrationService->setUserTransfer($userTransfer);
-        $userRegistrationService->register($user);
+        $user = \Phake::mock($userClass);
+        $this->createComponent('example_user_registration.user_registration_service')->register($user);
 
         \Phake::verify($user)->setActivationKey(\Phake::capture($activationKey));
         $this->assertThat(strlen($activationKey), $this->greaterThan(0));
@@ -85,10 +87,13 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         \Phake::when($userRepository)->findByActivationKey('activation_key')->thenReturn($user);
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
 
-        $userRegistrationService = new UserRegistrationService();
-        $userRegistrationService->setEntityManager($entityManager);
-        $userRegistrationService->activate('activation_key');
+        $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer');
+        \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(1);
+        $this->setComponent('example_user_registration.user_transfer', $userTransfer);
+
+        $this->createComponent('example_user_registration.user_registration_service')->activate('activation_key');
 
         $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
         $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));
