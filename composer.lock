@@ -1,5 +1,5 @@
 {
-    "hash": "addf2541972b996b4b6ae1658b8e4591",
+    "hash": "e88f1bb9be013a6a04112e671394b301",
     "packages": [
         {
             "name": "doctrine/common",
@@ -1218,7 +1218,54 @@
         }
     ],
     "packages-dev": [
-
+        {
+            "name": "piece/stagehand-componentfactory",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piece/stagehand-componentfactory",
+                "reference": "700c88c016af6d7a503375b9f0c60a1415f7a49e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/piece/stagehand-componentfactory/archive/700c88c016af6d7a503375b9f0c60a1415f7a49e.zip",
+                "reference": "700c88c016af6d7a503375b9f0c60a1415f7a49e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "ext-pcre": "*",
+                "symfony/dependency-injection": ">=2.0.0"
+            },
+            "time": "2012-09-21 08:45:24",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Stagehand\\ComponentFactory": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2"
+            ],
+            "authors": [
+                {
+                    "name": "KUBO Atsuhiro",
+                    "email": "kubo@iteman.jp"
+                }
+            ],
+            "description": "A component factory with the Symfony DependencyInjection component",
+            "homepage": "http://piece-framework.com/projects/stagehand-componentfactory",
+            "keywords": [
+                "dependency injection"
+            ]
+        }
     ],
     "aliases": [
 
@@ -1226,6 +1273,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "twig/extensions": 20,
-        "kriswallsmith/assetic": 20
+        "kriswallsmith/assetic": 20,
+        "piece/stagehand-componentfactory": 20
     }
 }

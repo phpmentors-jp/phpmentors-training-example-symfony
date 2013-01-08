@@ -21,6 +21,9 @@
         "jms/di-extra-bundle": "1.1.*",
         "kriswallsmith/assetic": "1.1.*@dev"
     },
+    "require-dev": {
+        "piece/stagehand-componentfactory": ">=1.1.0@dev"
+    },
     "scripts": {
         "post-install-cmd": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
