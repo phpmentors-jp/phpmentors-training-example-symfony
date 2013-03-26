@@ -1,8 +1,10 @@
 /web/bundles/
 /app/bootstrap.php.cache
 /app/cache/*
+!/app/cache/.gitkeep
 /app/config/parameters.yml
 /app/logs/*
+!/app/logs/.gitkeep
 /build/
 /vendor/
 /bin/
