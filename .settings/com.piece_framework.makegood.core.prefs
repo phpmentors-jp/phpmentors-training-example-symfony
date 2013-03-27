@@ -1,0 +1,10 @@
+cakephp_app_path=
+cakephp_core_path=
+ciunit_config_file=
+ciunit_path=
+eclipse.preferences.version=1
+phpunit_config_file=
+preload_script=/phpmentors-training-example-symfony/app/bootstrap_test.php
+test_file_pattern=
+test_folders=/phpmentors-training-example-symfony/src
+testing_framework=PHPUnit
