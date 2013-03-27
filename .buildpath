@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
 	<buildpathentry excluding="vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/Resources/skeleton/|vendor/jms/cg/tests/CG/Tests/Proxy/Fixture/LazyLoadingInterceptor.php" kind="src" path=""/>
+	<buildpathentry kind="con" path="org.eclipse.dltk.USER_LIBRARY/Phake"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 	<buildpathentry kind="con" path="org.eclipse.dltk.USER_LIBRARY/PHPUnit"/>
 </buildpath>
