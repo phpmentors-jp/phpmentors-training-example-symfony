@@ -1,5 +1,5 @@
 {
-    "hash": "68b01048805fca5c68d0c6090b64b930",
+    "hash": "54e2c3f9fa9454f8fb90a5dc64db255f",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1727,13 +1727,65 @@
         }
     ],
     "packages-dev": [
-
+        {
+            "name": "piece/stagehand-componentfactory",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piece/stagehand-componentfactory.git",
+                "reference": "700c88c016af6d7a503375b9f0c60a1415f7a49e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/piece/stagehand-componentfactory/zipball/700c88c016af6d7a503375b9f0c60a1415f7a49e",
+                "reference": "700c88c016af6d7a503375b9f0c60a1415f7a49e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.3.2",
+                "symfony/dependency-injection": ">=2.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stagehand\\ComponentFactory": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2"
+            ],
+            "authors": [
+                {
+                    "name": "KUBO Atsuhiro",
+                    "email": "kubo@iteman.jp"
+                }
+            ],
+            "description": "A component factory with the Symfony DependencyInjection component",
+            "homepage": "http://piece-framework.com/projects/stagehand-componentfactory",
+            "keywords": [
+                "dependency injection"
+            ],
+            "time": "2012-09-21 08:45:24"
+        }
     ],
     "aliases": [
 
     ],
     "minimum-stability": "alpha",
-    "stability-flags": [
+    "stability-flags": {
+        "piece/stagehand-componentfactory": 20
+    },
+    "platform": {
+        "php": ">=5.3.3"
+    },
+    "platform-dev": [
 
     ],
     "platform": {
