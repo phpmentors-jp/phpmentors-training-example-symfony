@@ -4,7 +4,7 @@
 /**
  * PHP version 5.3
  *
- * Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,6 +54,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
+    const SALT = 'cbab20bf0631558e0b723e5f48c337237a4d862d';
+
     /**
      * @var integer
      *
