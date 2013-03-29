@@ -34,9 +34,11 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Data\Repository;
+namespace Example\UserRegistrationBundle\Domain\Service;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
 use Example\UserRegistrationBundle\Domain\Data\User;
 
@@ -46,14 +48,46 @@ use Example\UserRegistrationBundle\Domain\Data\User;
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @since      Class available since Release 1.0.0
  */
-class UserRepository extends EntityRepository
+class UserRegistrationService
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface
+     */
+    protected $passwordEncoder;
+
+    /**
+     * @var \Symfony\Component\Security\Core\Util\SecureRandomInterface
+     */
+    protected $secureRandom;
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $passwordEncoder
+     * @param \Symfony\Component\Security\Core\Util\SecureRandomInterface $secureRandom
+     */
+    public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom)
+    {
+        $this->entityManager = $entityManager;
+        $this->passwordEncoder = $passwordEncoder;
+        $this->secureRandom = $secureRandom;
+    }
+
     /**
      * @param \Example\UserRegistrationBundle\Domain\Data\User $user
      */
-    public function add(User $user)
+    public function register(User $user)
     {
-        $this->getEntityManager()->persist($user);
+        $user->setActivationKey(base64_encode($this->secureRandom->nextBytes(24)));
+        $user->setPassword($this->passwordEncoder->encodePassword($user->getPassword(), User::SALT));
+        $user->setRegistrationDate(new \DateTime());
+
+        $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->add($user);
+        $this->entityManager->flush();
     }
 }
 
