@@ -37,7 +37,7 @@
 namespace Example\UserRegistrationBundle\Tests\Domain\Service;
 
 use Example\UserRegistrationBundle\Domain\Data\User;
-use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
+use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -45,7 +45,7 @@ use Example\UserRegistrationBundle\Domain\Service\UserRegistrationService;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
+class UserRegistrationServiceTest extends ComponentAwareTestCase
 {
     /**
      * @test
@@ -60,19 +60,22 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
 
         $passwordEncoder = \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface');
         \Phake::when($passwordEncoder)->encodePassword($this->anything(), $this->anything())->thenReturn($password);
+        $this->setComponent('example_user_registration.password_encoder', $passwordEncoder);
 
         $activationKey = 'ACTIVATION_KEY';
         $secureRandom = \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
         \Phake::when($secureRandom)->nextBytes($this->anything())->thenReturn($activationKey);
+        $this->setComponent('security.secure_random', $secureRandom);
 
         $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer');
         \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(true);
+        $this->setComponent('example_user_registration.user_transfer', $userTransfer);
 
-        $userRegistrationService = new UserRegistrationService($entityManager, $passwordEncoder, $secureRandom, $userTransfer);
-        $userRegistrationService->register($user);
+        $this->createComponent('example_user_registration.user_registration_service')->register($user);
 
         \Phake::verify($secureRandom)->nextBytes($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_INT));
         \Phake::verify($user)->setActivationKey($this->equalTo(base64_encode($activationKey)));
@@ -98,14 +101,13 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         \Phake::when($userRepository)->findOneByActivationKey($this->anything())->thenReturn($user);
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
 
-        $userRegistrationService = new UserRegistrationService(
-            $entityManager,
-            \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'),
-            \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'),
-            \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer')
-        );
-        $userRegistrationService->activate($activationKey);
+        $this->setComponent('example_user_registration.password_encoder', \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'));
+        $this->setComponent('security.secure_random', \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'));
+        $this->setComponent('example_user_registration.user_transfer', \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer'));
+
+        $this->createComponent('example_user_registration.user_registration_service')->activate($activationKey);
 
         $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
         $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));
