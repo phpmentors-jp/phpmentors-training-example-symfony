@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e67df720e8a1a2e0e6df41d91d788e48",
+    "hash": "76ca7711e1f020d61421918597a3b0e3",
     "packages": [
         {
             "name": "doctrine/common",
@@ -1168,15 +1168,61 @@
         }
     ],
     "packages-dev": [
-
+        {
+            "name": "piece/stagehand-componentfactory",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piece/stagehand-componentfactory.git",
+                "reference": "700c88c016af6d7a503375b9f0c60a1415f7a49e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/piece/stagehand-componentfactory/zipball/700c88c016af6d7a503375b9f0c60a1415f7a49e",
+                "reference": "700c88c016af6d7a503375b9f0c60a1415f7a49e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.3.2",
+                "symfony/dependency-injection": ">=2.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stagehand\\ComponentFactory": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2"
+            ],
+            "authors": [
+                {
+                    "name": "KUBO Atsuhiro",
+                    "email": "kubo@iteman.jp"
+                }
+            ],
+            "description": "A component factory with the Symfony DependencyInjection component",
+            "homepage": "http://piece-framework.com/projects/stagehand-componentfactory",
+            "keywords": [
+                "dependency injection"
+            ],
+            "time": "2012-09-21 08:45:24"
+        }
     ],
     "aliases": [
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "piece/stagehand-componentfactory": 20
+    },
     "platform": {
         "php": ">=5.3.3"
     },
