@@ -34,7 +34,7 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Tests\Domain\Service;
+namespace Example\UserRegistrationBundle\Tests\Usecase;
 
 use Example\UserRegistrationBundle\Entity\User;
 use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
@@ -45,7 +45,7 @@ use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserRegistrationServiceTest extends ComponentAwareTestCase
+class UserRegistrationUsecaseTest extends ComponentAwareTestCase
 {
     /**
      * @test
@@ -75,7 +75,7 @@ class UserRegistrationServiceTest extends ComponentAwareTestCase
         \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(true);
         $this->setComponent('example_user_registration.user_transfer', $userTransfer);
 
-        $this->createComponent('example_user_registration.user_registration_service')->register($user);
+        $this->createComponent('example_user_registration.user_registration_usecase')->run($user);
 
         \Phake::verify($secureRandom)->nextBytes($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_INT));
         \Phake::verify($user)->setActivationKey($this->equalTo(base64_encode($activationKey)));
@@ -107,7 +107,7 @@ class UserRegistrationServiceTest extends ComponentAwareTestCase
         $this->setComponent('security.secure_random', \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'));
         $this->setComponent('example_user_registration.user_transfer', \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer'));
 
-        $this->createComponent('example_user_registration.user_registration_service')->activate($activationKey);
+        $this->createComponent('example_user_registration.user_registration_usecase')->activate($activationKey);
 
         $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
         $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));

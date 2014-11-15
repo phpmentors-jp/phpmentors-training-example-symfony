@@ -34,7 +34,7 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Service;
+namespace Example\UserRegistrationBundle\Usecase;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
@@ -49,7 +49,7 @@ use Example\UserRegistrationBundle\Entity\User;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserRegistrationService
+class UserRegistrationUsecase
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -89,7 +89,7 @@ class UserRegistrationService
      * @param  \Example\UserRegistrationBundle\Entity\User $user
      * @throws \UnexpectedValueException
      */
-    public function register(User $user)
+    public function run(User $user)
     {
         $user->setActivationKey(base64_encode($this->secureRandom->nextBytes(24)));
         $user->setPassword($this->passwordEncoder->encodePassword($user->getPassword(), User::SALT));

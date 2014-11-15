@@ -25,7 +25,7 @@
 parameters:
   example_user_registration.swift_message.class: "Swift_Message"
   example_user_registration.user.class: "Example\\UserRegistrationBundle\\Entity\\User"
-  example_user_registration.user_registration_service.class: "Example\\UserRegistrationBundle\\Domain\\Service\\UserRegistrationService"
+  example_user_registration.user_registration_usecase.class: "Example\\UserRegistrationBundle\\Usecase\\UserRegistrationUsecase"
   example_user_registration.user_transfer.class: "Example\\UserRegistrationBundle\\Transfer\\UserTransfer"
 
 services:
@@ -41,8 +41,8 @@ services:
   example_user_registration.swift_message:
     class: "%example_user_registration.swift_message.class%"
 
-  example_user_registration.user_registration_service:
-    class: "%example_user_registration.user_registration_service.class%"
+  example_user_registration.user_registration_usecase:
+    class: "%example_user_registration.user_registration_usecase.class%"
     arguments:
       - "@example_user_registration.entity_manager"
       - "@example_user_registration.password_encoder"
