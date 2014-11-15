@@ -123,7 +123,7 @@ class UserRegistrationControllerTest extends WebTestCase
             $this->assertThat($client->getResponse()->getStatusCode(), $this->equalTo(200));
             $this->assertThat($client->getCrawler()->filter('title')->text(), $this->stringContains('登録完了'));
 
-            \Phake::verify($userRegistrationService)->register($this->isInstanceOf('Example\UserRegistrationBundle\Domain\Data\User'));
+            \Phake::verify($userRegistrationService)->register($this->isInstanceOf('Example\UserRegistrationBundle\Entity\User'));
         }
     }
 }

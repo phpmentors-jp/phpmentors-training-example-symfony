@@ -34,7 +34,7 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Data;
+namespace Example\UserRegistrationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -46,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  *
- * @ORM\Entity(repositoryClass="Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="Example\UserRegistrationBundle\Repository\UserRepository")
  * @ORM\Table(name="user",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="user_email_idx", columns={"email"}),

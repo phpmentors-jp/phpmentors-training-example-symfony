@@ -40,7 +40,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Example\UserRegistrationBundle\Domain\Data\Factory\UserFactory;
+use Example\UserRegistrationBundle\Entity\UserFactory;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony

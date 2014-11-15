@@ -40,8 +40,8 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
-use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Domain\Data\User;
+use Example\UserRegistrationBundle\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Entity\User;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -67,7 +67,7 @@ class UserRegistrationService
     protected $secureRandom;
 
     /**
-     * @var \Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer
+     * @var \Example\UserRegistrationBundle\Transfer\UserTransfer
      */
     protected $userTransfer;
 
@@ -75,7 +75,7 @@ class UserRegistrationService
      * @param \Doctrine\ORM\EntityManager                                       $entityManager
      * @param \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $passwordEncoder
      * @param \Symfony\Component\Security\Core\Util\SecureRandomInterface       $secureRandom
-     * @param \Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer $userTransfer
+     * @param \Example\UserRegistrationBundle\Transfer\UserTransfer $userTransfer
      */
     public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom, UserTransfer $userTransfer)
     {
@@ -86,7 +86,7 @@ class UserRegistrationService
     }
 
     /**
-     * @param  \Example\UserRegistrationBundle\Domain\Data\User $user
+     * @param  \Example\UserRegistrationBundle\Entity\User $user
      * @throws \UnexpectedValueException
      */
     public function register(User $user)
@@ -95,7 +95,7 @@ class UserRegistrationService
         $user->setPassword($this->passwordEncoder->encodePassword($user->getPassword(), User::SALT));
         $user->setRegistrationDate(new \DateTime());
 
-        $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->add($user);
+        $this->entityManager->getRepository('Example\UserRegistrationBundle\Entity\User')->add($user);
         $this->entityManager->flush();
 
         $emailSent = $this->userTransfer->sendActivationEmail($user);
@@ -109,7 +109,7 @@ class UserRegistrationService
      */
     public function activate($activationKey)
     {
-        $user = $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->findOneByActivationKey($activationKey);
+        $user = $this->entityManager->getRepository('Example\UserRegistrationBundle\Entity\User')->findOneByActivationKey($activationKey);
         if (is_null($user)) {
             throw new \UnexpectedValueException('アクティベーションキーが見つかりません。');
         }

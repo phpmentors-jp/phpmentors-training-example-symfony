@@ -34,9 +34,9 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Data\Transfer;
+namespace Example\UserRegistrationBundle\Transfer;
 
-use Example\UserRegistrationBundle\Domain\Data\User;
+use Example\UserRegistrationBundle\Entity\User;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -93,7 +93,7 @@ class UserTransfer
     }
 
     /**
-     * @param  \Example\UserRegistrationBundle\Domain\Data\User $user
+     * @param  \Example\UserRegistrationBundle\Entity\User $user
      * @return boolean
      */
     public function sendActivationEmail(User $user)

@@ -36,7 +36,7 @@
 
 namespace Example\UserRegistrationBundle\Tests\Domain\Service;
 
-use Example\UserRegistrationBundle\Domain\Data\User;
+use Example\UserRegistrationBundle\Entity\User;
 use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
 
 /**
@@ -52,8 +52,8 @@ class UserRegistrationServiceTest extends ComponentAwareTestCase
      */
     public function ユーザーを登録する()
     {
-        $userClass = 'Example\UserRegistrationBundle\Domain\Data\User';
-        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository');
+        $userClass = 'Example\UserRegistrationBundle\Entity\User';
+        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Repository\UserRepository');
         $password = 'PASSWORD';
         $user = \Phake::mock($userClass);
         \Phake::when($user)->getPassword()->thenReturn($password);
@@ -71,7 +71,7 @@ class UserRegistrationServiceTest extends ComponentAwareTestCase
         \Phake::when($secureRandom)->nextBytes($this->anything())->thenReturn($activationKey);
         $this->setComponent('security.secure_random', $secureRandom);
 
-        $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer');
+        $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer');
         \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(true);
         $this->setComponent('example_user_registration.user_transfer', $userTransfer);
 
@@ -97,7 +97,7 @@ class UserRegistrationServiceTest extends ComponentAwareTestCase
         $user = new User();
         $user->setActivationKey($activationKey);
         $userClass = get_class($user);
-        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Repository\UserRepository');
+        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Repository\UserRepository');
         \Phake::when($userRepository)->findOneByActivationKey($this->anything())->thenReturn($user);
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
@@ -105,7 +105,7 @@ class UserRegistrationServiceTest extends ComponentAwareTestCase
 
         $this->setComponent('example_user_registration.password_encoder', \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'));
         $this->setComponent('security.secure_random', \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'));
-        $this->setComponent('example_user_registration.user_transfer', \Phake::mock('Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer'));
+        $this->setComponent('example_user_registration.user_transfer', \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer'));
 
         $this->createComponent('example_user_registration.user_registration_service')->activate($activationKey);
 

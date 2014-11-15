@@ -4,7 +4,7 @@
 /**
  * PHP version 5.3
  *
- * Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,9 +34,11 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Data\Factory;
+namespace Example\UserRegistrationBundle\Repository;
 
-use Example\UserRegistrationBundle\Domain\Data\User;
+use Doctrine\ORM\EntityRepository;
+
+use Example\UserRegistrationBundle\Entity\User;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -44,14 +46,25 @@ use Example\UserRegistrationBundle\Domain\Data\User;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserFactory
+class UserRepository extends EntityRepository
 {
     /**
-     * @return \Example\UserRegistrationBundle\Domain\Data\User
+     * @param \Example\UserRegistrationBundle\Entity\User $user
      */
-    public function create()
+    public function add(User $user)
     {
-        return new User();
+        $this->getEntityManager()->persist($user);
+    }
+
+    /**
+     * @param  string                                           $activationKey
+     * @return \Example\UserRegistrationBundle\Entity\User
+     */
+    public function findOneByActivationKey($activationKey)
+    {
+        $users = $this->findBy(array('activationKey' => $activationKey));
+        if (count($users) == 0) return null;
+        return $users[0];
     }
 }
 

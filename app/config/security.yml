@@ -1,7 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
-        Example\UserRegistrationBundle\Domain\Data\User:
+        Example\UserRegistrationBundle\Entity\User:
             algorithm: sha1
             iterations: 5000
             encode_as_base64: true
