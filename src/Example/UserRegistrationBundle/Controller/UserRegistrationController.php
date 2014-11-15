@@ -40,7 +40,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Example\UserRegistrationBundle\Domain\Data\Factory\UserFactory;
+use Example\UserRegistrationBundle\Entity\UserFactory;
 use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
 
 /**
@@ -135,7 +135,7 @@ class UserRegistrationController extends Controller
                 return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
             }
 
-            $this->get('example_user_registration.user_registration_service')->register($this->get('session')->get('user'));
+            $this->get('example_user_registration.user_registration_usecase')->run($this->get('session')->get('user'));
 
             $this->get('session')->remove('user');
 

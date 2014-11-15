@@ -40,7 +40,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Example\UserRegistrationBundle\Domain\Data\Factory\UserFactory;
+use Example\UserRegistrationBundle\Entity\UserFactory;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -65,11 +65,11 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
         $user->setEmail('foo@iteman.jp');
         $user->setPassword('password');
 
-        $userRegistrationService = $this->getContainer()->get('example_user_registration.user_registration_service');
-        $userRegistrationService->register($user);
+        $userRegistration = $this->getContainer()->get('example_user_registration.user_registration_usecase');
+        $userRegistration->run($user);
 
         $this->getContainer()->get('doctrine')->getManager()->detach($user);
-        $userRegistrationService->activate($user->getActivationKey());
+        $userRegistration->activate($user->getActivationKey());
 
         return 0;
     }

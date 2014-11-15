@@ -59,8 +59,8 @@ doctrine:
         mappings:
             ExampleUserRegistrationBundle:
                 type: annotation
-                dir: Domain/Data
-                prefix: Example\UserRegistrationBundle\Domain\Data
+                dir: Entity
+                prefix: Example\UserRegistrationBundle\Entity
 
 # Swiftmailer Configuration
 swiftmailer:

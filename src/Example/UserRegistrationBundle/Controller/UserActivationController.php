@@ -66,7 +66,7 @@ class UserActivationController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $this->get('example_user_registration.user_registration_service')->activate($this->getRequest()->query->get('key'));
+        $this->get('example_user_registration.user_registration_usecase')->activate($this->getRequest()->query->get('key'));
 
         return $this->render(self::$VIEW_SUCCESS);
     }

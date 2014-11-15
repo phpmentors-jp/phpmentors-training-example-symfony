@@ -34,14 +34,16 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Example\UserRegistrationBundle\Domain\Service;
+namespace Example\UserRegistrationBundle\Usecase;
 
 use Doctrine\ORM\EntityManager;
+use PHPMentors\DomainKata\Entity\EntityInterface;
+use PHPMentors\DomainKata\Usecase\CommandUsecaseInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
-use Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Domain\Data\User;
+use Example\UserRegistrationBundle\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Entity\User;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -49,7 +51,7 @@ use Example\UserRegistrationBundle\Domain\Data\User;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserRegistrationService
+class UserRegistrationUsecase implements CommandUsecaseInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -67,7 +69,7 @@ class UserRegistrationService
     protected $secureRandom;
 
     /**
-     * @var \Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer
+     * @var \Example\UserRegistrationBundle\Transfer\UserTransfer
      */
     protected $userTransfer;
 
@@ -75,7 +77,7 @@ class UserRegistrationService
      * @param \Doctrine\ORM\EntityManager                                       $entityManager
      * @param \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $passwordEncoder
      * @param \Symfony\Component\Security\Core\Util\SecureRandomInterface       $secureRandom
-     * @param \Example\UserRegistrationBundle\Domain\Data\Transfer\UserTransfer $userTransfer
+     * @param \Example\UserRegistrationBundle\Transfer\UserTransfer $userTransfer
      */
     public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom, UserTransfer $userTransfer)
     {
@@ -86,16 +88,16 @@ class UserRegistrationService
     }
 
     /**
-     * @param  \Example\UserRegistrationBundle\Domain\Data\User $user
+     * @param  \PHPMentors\DomainKata\Entity\EntityInterface $user
      * @throws \UnexpectedValueException
      */
-    public function register(User $user)
+    public function run(EntityInterface $user)
     {
         $user->setActivationKey(base64_encode($this->secureRandom->nextBytes(24)));
         $user->setPassword($this->passwordEncoder->encodePassword($user->getPassword(), User::SALT));
         $user->setRegistrationDate(new \DateTime());
 
-        $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->add($user);
+        $this->entityManager->getRepository('Example\UserRegistrationBundle\Entity\User')->add($user);
         $this->entityManager->flush();
 
         $emailSent = $this->userTransfer->sendActivationEmail($user);
@@ -109,7 +111,7 @@ class UserRegistrationService
      */
     public function activate($activationKey)
     {
-        $user = $this->entityManager->getRepository('Example\UserRegistrationBundle\Domain\Data\User')->findOneByActivationKey($activationKey);
+        $user = $this->entityManager->getRepository('Example\UserRegistrationBundle\Entity\User')->findOneByActivationKey($activationKey);
         if (is_null($user)) {
             throw new \UnexpectedValueException('アクティベーションキーが見つかりません。');
         }

@@ -110,9 +110,9 @@ class UserRegistrationControllerTest extends WebTestCase
         }
 
         確認フォームの送信: {
-            $userRegistrationService = \Phake::mock('Example\UserRegistrationBundle\Domain\Service\UserRegistrationService');
-            $postBootListener = function (BundleEvent $event) use ($self, $userRegistrationService) {
-                $event->getContainer()->set('example_user_registration.user_registration_service', $userRegistrationService);
+            $userRegistration = \Phake::mock('Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase');
+            $postBootListener = function (BundleEvent $event) use ($self, $userRegistration) {
+                $event->getContainer()->set('example_user_registration.user_registration_usecase', $userRegistration);
             };
             BundleEvent::addPostBootListener($postBootListener);
             $client->submit($client->getCrawler()->selectButton('next')->form());
@@ -123,7 +123,7 @@ class UserRegistrationControllerTest extends WebTestCase
             $this->assertThat($client->getResponse()->getStatusCode(), $this->equalTo(200));
             $this->assertThat($client->getCrawler()->filter('title')->text(), $this->stringContains('登録完了'));
 
-            \Phake::verify($userRegistrationService)->register($this->isInstanceOf('Example\UserRegistrationBundle\Domain\Data\User'));
+            \Phake::verify($userRegistration)->run($this->isInstanceOf('Example\UserRegistrationBundle\Entity\User'));
         }
     }
 }
