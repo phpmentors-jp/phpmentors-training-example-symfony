@@ -39,6 +39,8 @@ namespace Example\UserRegistrationBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 use Example\UserRegistrationBundle\Entity\User;
+use PHPMentors\DomainKata\Entity\EntityInterface;
+use PHPMentors\DomainKata\Repository\RepositoryInterface;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -46,12 +48,12 @@ use Example\UserRegistrationBundle\Entity\User;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserRepository extends EntityRepository
+class UserRepository extends EntityRepository implements RepositoryInterface
 {
     /**
-     * @param \Example\UserRegistrationBundle\Entity\User $user
+     * @param \PHPMentors\DomainKata\Entity\EntityInterface $user
      */
-    public function add(User $user)
+    public function add(EntityInterface $user)
     {
         $this->getEntityManager()->persist($user);
     }
@@ -65,6 +67,13 @@ class UserRepository extends EntityRepository
         $users = $this->findBy(array('activationKey' => $activationKey));
         if (count($users) == 0) return null;
         return $users[0];
+    }
+
+    /**
+     * @param \PHPMentors\DomainKata\Entity\EntityInterface $entity
+     */
+    public function remove(EntityInterface $entity)
+    {
     }
 }
 

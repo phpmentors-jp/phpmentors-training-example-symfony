@@ -39,6 +39,7 @@ namespace Example\UserRegistrationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use PHPMentors\DomainKata\Entity\EntityInterface;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
@@ -55,7 +56,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields="email", message="このメールアドレスはすでに使用されています", groups={"registration"})
  */
-class User
+class User implements EntityInterface
 {
     const SALT = 'cbab20bf0631558e0b723e5f48c337237a4d862d';
 

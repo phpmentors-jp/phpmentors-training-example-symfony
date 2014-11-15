@@ -37,6 +37,8 @@
 namespace Example\UserRegistrationBundle\Usecase;
 
 use Doctrine\ORM\EntityManager;
+use PHPMentors\DomainKata\Entity\EntityInterface;
+use PHPMentors\DomainKata\Usecase\CommandUsecaseInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
@@ -49,7 +51,7 @@ use Example\UserRegistrationBundle\Entity\User;
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
-class UserRegistrationUsecase
+class UserRegistrationUsecase implements CommandUsecaseInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -86,10 +88,10 @@ class UserRegistrationUsecase
     }
 
     /**
-     * @param  \Example\UserRegistrationBundle\Entity\User $user
+     * @param  \PHPMentors\DomainKata\Entity\EntityInterface $user
      * @throws \UnexpectedValueException
      */
-    public function run(User $user)
+    public function run(EntityInterface $user)
     {
         $user->setActivationKey(base64_encode($this->secureRandom->nextBytes(24)));
         $user->setPassword($this->passwordEncoder->encodePassword($user->getPassword(), User::SALT));
