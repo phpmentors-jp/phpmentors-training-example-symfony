@@ -57,7 +57,7 @@ The script returns a status code of `0` if all mandatory requirements are met,
 
 Access the `config.php` script from a browser:
 
-    http://localhost/path/to/symfony/app/web/config.php
+    http://localhost/path-to-project/web/config.php
 
 If you get any warnings or recommendations, fix them before moving on.
 
@@ -100,9 +100,8 @@ playing with it, you can remove it by following these steps:
 
   * remove the `web/bundles/acmedemo` directory;
 
-  * remove the `security.providers`, `security.firewalls.login` and
-    `security.firewalls.secured_area` entries in the `security.yml` file or
-    tweak the security configuration to fit your needs.
+  * empty the `security.yml` file or tweak the security configuration to fit
+    your needs.
 
 What's inside?
 ---------------
@@ -156,16 +155,16 @@ released under the MIT or BSD license.
 
 Enjoy!
 
-[1]:  http://symfony.com/doc/2.3/book/installation.html
+[1]:  http://symfony.com/doc/2.5/book/installation.html
 [2]:  http://getcomposer.org/
 [3]:  http://symfony.com/download
-[4]:  http://symfony.com/doc/2.3/quick_tour/the_big_picture.html
-[5]:  http://symfony.com/doc/2.3/index.html
-[6]:  http://symfony.com/doc/2.3/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  http://symfony.com/doc/2.3/book/doctrine.html
-[8]:  http://symfony.com/doc/2.3/book/templating.html
-[9]:  http://symfony.com/doc/2.3/book/security.html
-[10]: http://symfony.com/doc/2.3/cookbook/email.html
-[11]: http://symfony.com/doc/2.3/cookbook/logging/monolog.html
-[12]: http://symfony.com/doc/2.3/cookbook/assetic/asset_management.html
-[13]: http://symfony.com/doc/2.3/bundles/SensioGeneratorBundle/index.html
+[4]:  http://symfony.com/doc/2.5/quick_tour/the_big_picture.html
+[5]:  http://symfony.com/doc/2.5/index.html
+[6]:  http://symfony.com/doc/2.5/bundles/SensioFrameworkExtraBundle/index.html
+[7]:  http://symfony.com/doc/2.5/book/doctrine.html
+[8]:  http://symfony.com/doc/2.5/book/templating.html
+[9]:  http://symfony.com/doc/2.5/book/security.html
+[10]: http://symfony.com/doc/2.5/cookbook/email.html
+[11]: http://symfony.com/doc/2.5/cookbook/logging/monolog.html
+[12]: http://symfony.com/doc/2.5/cookbook/assetic/asset_management.html
+[13]: http://symfony.com/doc/2.5/bundles/SensioGeneratorBundle/index.html
