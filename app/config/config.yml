@@ -62,6 +62,11 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        mappings:
+            ExampleUserRegistrationBundle:
+                type: annotation
+                dir: Entity
+                prefix: Example\UserRegistrationBundle\Entity
 
 # Swiftmailer Configuration
 swiftmailer:
