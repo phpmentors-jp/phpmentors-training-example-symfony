@@ -18,10 +18,11 @@ use PHPMentors\DomainKata\Repository\RepositoryInterface;
 class UserRepository extends EntityRepository implements RepositoryInterface
 {
     /**
-     * @param \PHPMentors\DomainKata\Entity\EntityInterface $entity
+     * @param \PHPMentors\DomainKata\Entity\EntityInterface $user
      */
-    public function add(EntityInterface $entity)
+    public function add(EntityInterface $user)
     {
+        $this->getEntityManager()->persist($user);
     }
 
     /**

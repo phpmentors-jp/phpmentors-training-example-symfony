@@ -25,6 +25,8 @@ use PHPMentors\DomainKata\Entity\EntityInterface;
  */
 class User implements EntityInterface
 {
+    const SALT = 'cbab20bf0631558e0b723e5f48c337237a4d862d';
+
     /**
      * @var integer
      *
