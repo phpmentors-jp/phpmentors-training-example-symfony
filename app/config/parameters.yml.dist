@@ -13,6 +13,8 @@ parameters:
     mailer_host:       127.0.0.1
     mailer_user:       ~
     mailer_password:   ~
+    gmail_user:        your_gmail_username
+    gmail_password:    your_gmail_password
 
     locale:            en
 
