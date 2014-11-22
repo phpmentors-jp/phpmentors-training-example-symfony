@@ -21,6 +21,7 @@
         "phpmentors/domain-kata": "1.2.*"
     },
     "require-dev": {
+        "phake/phake": "~1.0",
         "phpunit/phpunit": "~4.0",
         "piece/stagehand-testrunner": ">=4.0.1",
         "sensio/generator-bundle": "~2.3"
