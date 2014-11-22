@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "72618f06b97326e1ac2f511494229db5",
+    "hash": "4a381d3a5e9820767ca40f7b3b47ad44",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -959,6 +959,59 @@
                 "psr-3"
             ],
             "time": "2014-09-30 13:30:58"
+        },
+        {
+            "name": "phpmentors/domain-kata",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpmentors-jp/domain-kata.git",
+                "reference": "badd52af82fedf43dbf8556a60e5598a41e6e6f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpmentors-jp/domain-kata/zipball/badd52af82fedf43dbf8556a60e5598a41e6e6f5",
+                "reference": "badd52af82fedf43dbf8556a60e5598a41e6e6f5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPMentors\\DomainKata\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "KUBO Atsuhiro",
+                    "email": "kubo@iteman.jp"
+                },
+                {
+                    "name": "GOTO Hidenori",
+                    "email": "hidenorigoto@gmail.com"
+                }
+            ],
+            "description": "Kata for domain models",
+            "keywords": [
+                "Domain Driven Design",
+                "architecture",
+                "ddd",
+                "design",
+                "generative programming",
+                "modeling"
+            ],
+            "time": "2014-11-07 04:55:56"
         },
         {
             "name": "psr/log",
