@@ -4,6 +4,10 @@ security:
     # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        Example\UserRegistrationBundle\Entity\User:
+            algorithm: sha1
+            iterations: 5000
+            encode_as_base64: true
 
     # http://symfony.com/doc/current/book/security.html#hierarchical-roles
     role_hierarchy:
