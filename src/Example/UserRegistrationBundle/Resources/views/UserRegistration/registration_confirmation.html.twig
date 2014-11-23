@@ -1,0 +1,19 @@
+{#
+ # Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+ # All rights reserved.
+ #
+ # This file is part of PHPMentors_Training_Example_Symfony.
+ #
+ # This program and the accompanying materials are made available under
+ # the terms of the BSD 2-Clause License which accompanies this
+ # distribution, and is available at http://opensource.org/licenses/BSD-2-Clause
+ #}
+
+<h2>登録内容のご確認</h2>
+
+<form action="{{ path('example_userregistration_userregistration_confirmationpost') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" name="prev" value="修正する" />
+    <input type="submit" name="next" value="登録する" />
+</form>
