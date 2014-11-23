@@ -4,7 +4,7 @@
 /**
  * PHP version 5.3
  *
- * Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,35 +29,122 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    PHPMentors_Training_Example_Symfony
- * @copyright  2012 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2012-2013 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      File available since Release 1.0.0
  */
 
 namespace Example\UserRegistrationBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @package    PHPMentors_Training_Example_Symfony
- * @copyright  2012 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2012-2013 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://opensource.org/licenses/BSD-2-Clause  The BSD 2-Clause License
  * @since      Class available since Release 1.0.0
  */
 class UserRegistrationController extends Controller
 {
     /**
-     * @Route("/hello/{name}")
-     * @Template()
+     * @var string
      */
-    public function indexAction($name)
+    private static $VIEW_INPUT = 'ExampleUserRegistrationBundle:UserRegistration:registration_input.html.twig';
+
+    /**
+     * @var string
+     */
+    private static $VIEW_CONFIRMATION = 'ExampleUserRegistrationBundle:UserRegistration:registration_confirmation.html.twig';
+
+    /**
+     * @var string
+     */
+    private static $VIEW_SUCCESS = 'ExampleUserRegistrationBundle:UserRegistration:registration_success.html.twig';
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/users/registration/")
+     * @Method("GET")
+     */
+    public function inputAction()
     {
-        return array('name' => $name);
+        return $this->render(self::$VIEW_INPUT, array(
+            'form' => $this->createFormBuilder()->getForm()->createView(),
+        ));
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/users/registration/")
+     * @Method("POST")
+     */
+    public function inputPostAction(Request $request)
+    {
+        $form = $this->createFormBuilder()->getForm();
+        $form->submit($request);
+        if ($form->isValid()) {
+            return $this->redirect($this->generateUrl('example_userregistration_userregistration_confirmation', array(), true));
+        } else {
+            return $this->render(self::$VIEW_INPUT, array(
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/users/registration/confirmation")
+     * @Method("GET")
+     */
+    public function confirmationAction()
+    {
+        return $this->render(self::$VIEW_CONFIRMATION, array(
+            'form' => $this->createFormBuilder()->getForm()->createView(),
+        ));
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/users/registration/confirmation")
+     * @Method("POST")
+     */
+    public function confirmationPostAction(Request $request)
+    {
+        $form = $this->createFormBuilder()->getForm();
+        $form->submit($request);
+        if ($form->isValid()) {
+            if ($request->request->has('prev')) {
+                return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
+            }
+
+            return $this->redirect($this->generateUrl('example_userregistration_userregistration_success', array(), true));
+        } else {
+            return $this->render(self::$VIEW_CONFIRMATION, array(
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/users/registration/success")
+     * @Method("GET")
+     */
+    public function successAction()
+    {
+        return $this->render(self::$VIEW_SUCCESS);
     }
 }
-
 
 /*
  * Local Variables:
