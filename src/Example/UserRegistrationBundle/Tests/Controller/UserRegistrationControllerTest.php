@@ -4,7 +4,7 @@ namespace Example\UserRegistrationBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DefaultControllerTest extends WebTestCase
+class UserRegistrationControllerTest extends WebTestCase
 {
     public function testIndex()
     {
