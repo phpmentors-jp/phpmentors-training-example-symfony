@@ -1,4 +1,4 @@
-# Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+# Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
 # All rights reserved.
 #
 # This file is part of PHPMentors_Training_Example_Symfony.
@@ -8,5 +8,41 @@
 # distribution, and is available at http://opensource.org/licenses/BSD-2-Clause
 
 parameters:
+  example_user_registration.swift_message.class: "Swift_Message"
+  example_user_registration.user_activation_usecase.class: "Example\\UserRegistrationBundle\\Usecase\\UserActivationUsecase"
+  example_user_registration.user.class: "Example\\UserRegistrationBundle\\Entity\\User"
+  example_user_registration.user_registration_usecase.class: "Example\\UserRegistrationBundle\\Usecase\\UserRegistrationUsecase"
+  example_user_registration.user_transfer.class: "Example\\UserRegistrationBundle\\Transfer\\UserTransfer"
 
 services:
+  example_user_registration.entity_manager:
+    synthetic: true
+
+  example_user_registration.password_encoder:
+    class: "DUMMY"
+    factory_service: security.encoder_factory
+    factory_method: getEncoder
+    arguments: [ "%example_user_registration.user.class%" ]
+
+  example_user_registration.swift_message:
+    class: "%example_user_registration.swift_message.class%"
+
+  example_user_registration.user_activation_usecase:
+    class: "%example_user_registration.user_activation_usecase.class%"
+    arguments:
+      - "@example_user_registration.entity_manager"
+
+  example_user_registration.user_registration_usecase:
+    class: "%example_user_registration.user_registration_usecase.class%"
+    arguments:
+      - "@example_user_registration.entity_manager"
+      - "@example_user_registration.password_encoder"
+      - "@security.secure_random"
+      - "@example_user_registration.user_transfer"
+
+  example_user_registration.user_transfer:
+    class: "%example_user_registration.user_transfer.class%"
+    arguments:
+      - "@mailer"
+      - "@example_user_registration.swift_message"
+      - "@twig"
