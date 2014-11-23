@@ -12,9 +12,9 @@
 namespace Example\UserRegistrationBundle\Tests\Usecase;
 
 use Example\UserRegistrationBundle\Entity\User;
-use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
+use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
 
-class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
+class UserRegistrationUsecaseTest extends ComponentAwareTestCase
 {
     /**
      * @test
@@ -29,19 +29,22 @@ class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
 
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
 
         $passwordEncoder = \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface');
         \Phake::when($passwordEncoder)->encodePassword($this->anything(), $this->anything())->thenReturn($password);
+        $this->setComponent('example_user_registration.password_encoder', $passwordEncoder);
 
         $activationKey = 'ACTIVATION_KEY';
         $secureRandom = \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
         \Phake::when($secureRandom)->nextBytes($this->anything())->thenReturn($activationKey);
+        $this->setComponent('security.secure_random', $secureRandom);
 
         $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer');
         \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(true);
+        $this->setComponent('example_user_registration.user_transfer', $userTransfer);
 
-        $userRegistrationUsecase = new UserRegistrationUsecase($entityManager, $passwordEncoder, $secureRandom, $userTransfer);
-        $userRegistrationUsecase->run($user);
+        $this->createComponent('example_user_registration.user_registration_usecase')->run($user);
 
         \Phake::verify($secureRandom)->nextBytes($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_INT));
         \Phake::verify($user)->setActivationKey($this->equalTo(base64_encode($activationKey)));
@@ -67,13 +70,13 @@ class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
         \Phake::when($userRepository)->findOneByActivationKey($this->anything())->thenReturn($user);
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
-        $userRegistrationUsecase = new UserRegistrationUsecase(
-            $entityManager,
-            \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'),
-            \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'),
-            \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer')
-        );
-        $userRegistrationUsecase->activate($activationKey);
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
+
+        $this->setComponent('example_user_registration.password_encoder', \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'));
+        $this->setComponent('security.secure_random', \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'));
+        $this->setComponent('example_user_registration.user_transfer', \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer'));
+
+        $this->createComponent('example_user_registration.user_registration_usecase')->activate($activationKey);
 
         $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
         $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));
