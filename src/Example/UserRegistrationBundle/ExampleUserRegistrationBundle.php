@@ -38,6 +38,8 @@ namespace Example\UserRegistrationBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+use Example\UserRegistrationBundle\Event\BundleEvent;
+
 /**
  * @package    PHPMentors_Training_Example_Symfony
  * @copyright  2012 KUBO Atsuhiro <kubo@iteman.jp>
@@ -48,7 +50,21 @@ class ExampleUserRegistrationBundle extends Bundle
 {
     public function boot()
     {
+        foreach (BundleEvent::getPostBootListeners() as $postBootListener) {
+            $this->container->get('event_dispatcher')->addListener(BundleEvent::POST_BOOT, $postBootListener);
+        }
+        $this->container->get('event_dispatcher')->dispatch(BundleEvent::POST_BOOT, new BundleEvent($this->container));
+
         $this->configureSwiftMailer();
+
+        $this->container->set('example_user_registration.entity_manager', $this->container->get('doctrine')->getManager());
+    }
+
+    public function shutdown()
+    {
+        foreach (BundleEvent::getPostBootListeners() as $postBootListener) {
+            $this->container->get('event_dispatcher')->removeListener(BundleEvent::POST_BOOT, $postBootListener);
+        }
     }
 
     protected function configureSwiftMailer()
@@ -61,7 +77,6 @@ class ExampleUserRegistrationBundle extends Bundle
         });
     }
 }
-
 
 /*
  * Local Variables:
