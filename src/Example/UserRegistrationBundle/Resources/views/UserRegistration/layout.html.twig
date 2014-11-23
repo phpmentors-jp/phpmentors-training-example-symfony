@@ -27,15 +27,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Example ユーザー登録{% block title %}: {% endblock %}</title>
+    <link href="{{ asset('bundles/exampleuserregistration/vendor/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/exampleuserregistration/vendor/bootstrap/css/bootstrap-responsive.css') }}" rel="stylesheet">
 </head>
 <body>
 <h1>Example ユーザー登録</h1>
 
-<div>
-    {% block content %}
-    {% endblock %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
 </div>
 </body>
 </html>

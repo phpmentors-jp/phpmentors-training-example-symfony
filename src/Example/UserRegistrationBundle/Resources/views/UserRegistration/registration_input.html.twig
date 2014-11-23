@@ -24,13 +24,23 @@
  # POSSIBILITY OF SUCH DAMAGE.
  #}
 
-<h2>ユーザー情報のご入力</h2>
+{% extends "ExampleUserRegistrationBundle:UserRegistration:layout.html.twig" %}
 
-<form action="{{ path('example_userregistration_userregistration_inputpost') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
+{% block title %}{{ parent() }}ユーザー情報のご入力{% endblock %}
 
-    <input type="submit" name="next" value="次へ" />
-</form>
+{% block content %}
+    <h2>ユーザー情報のご入力</h2>
+
+    <div class="well">
+        <form action="{{ path('example_userregistration_userregistration_inputpost') }}" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+
+            <div class="form-actions">
+                <button class="btn btn-primary span1" type="submit" name="next"><b>次へ</b></button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
 
 {#
  # Local Variables:

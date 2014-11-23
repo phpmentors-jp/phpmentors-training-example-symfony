@@ -24,9 +24,19 @@
  # POSSIBILITY OF SUCH DAMAGE.
  #}
 
-<h2>登録完了</h2>
+{% extends "ExampleUserRegistrationBundle:UserRegistration:layout.html.twig" %}
 
-<p>ユーザー登録が完了いたしました。ユーザーアカウントの有効化手続きのご案内についてメールを送信いたします。</p>
+{% block title %}{{ parent() }}登録完了{% endblock %}
+
+{% block content %}
+    <h2>登録完了</h2>
+
+    <div class="well">
+        <div class="container-fluid">
+            <p>ユーザー登録が完了いたしました。ユーザーアカウントの有効化手続きのご案内についてメールを送信いたします。</p>
+        </div>
+    </div>
+{% endblock %}
 
 {#
  # Local Variables:
