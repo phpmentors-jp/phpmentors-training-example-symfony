@@ -32,8 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Example\UserRegistrationBundle\Entity\User;
 use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
-use Example\UserRegistrationBundle\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 /**
  * @Route("/users/registration", service="example_user_registration.user_registration_controller")
@@ -193,11 +191,6 @@ class UserRegistrationController extends Controller implements ConversationalCon
      */
     private function createUserRegistrationUsecase()
     {
-        return new UserRegistrationUsecase(
-            $this->get('doctrine')->getEntityManager(),
-            $this->get('security.encoder_factory')->getEncoder('Example\UserRegistrationBundle\Entity\User'),
-            $this->get('security.secure_random'),
-            new UserTransfer($this->get('mailer'), new \Swift_Message(), $this->get('twig'))
-        );
+        return $this->get('example_user_registration.user_registration_usecase');
     }
 }

@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Example\UserRegistrationBundle\Entity\ActivationKey;
-use Example\UserRegistrationBundle\Usecase\UserActivationUsecase;
 
 class UserActivationController extends Controller
 {
@@ -52,6 +51,6 @@ class UserActivationController extends Controller
      */
     private function createUserActivationUsecase()
     {
-        return new UserActivationUsecase($this->get('doctrine')->getManager());
+        return $this->get('example_user_registration.user_activation_usecase');
     }
 }

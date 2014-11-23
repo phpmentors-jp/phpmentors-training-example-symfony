@@ -9,11 +9,34 @@
 
 parameters:
     # Classes
+    example_user_registration.password_encoder.class: "Symfony\\Component\\Security\\Core\\Encoder\\PasswordEncoderInterface"
+    example_user_registration.swift_message.class: "Swift_Message"
+    example_user_registration.user.class: "Example\\UserRegistrationBundle\\Entity\\User"
+    example_user_registration.user_activation_usecase.class: "Example\\UserRegistrationBundle\\Usecase\\UserActivationUsecase"
     example_user_registration.user_registration_controller.class: "Example\\UserRegistrationBundle\\Controller\\UserRegistrationController"
+    example_user_registration.user_registration_usecase.class: "Example\\UserRegistrationBundle\\Usecase\\UserRegistrationUsecase"
+    example_user_registration.user_transfer.class: "Example\\UserRegistrationBundle\\Transfer\\UserTransfer"
 
     # Configuration Parameters
 
 services:
+    example_user_registration.entity_manager:
+      synthetic: true
+
+    example_user_registration.password_encoder:
+        class: "%example_user_registration.password_encoder.class%"
+        factory_service: security.encoder_factory
+        factory_method: getEncoder
+        arguments: ["%example_user_registration.user.class%"]
+
+    example_user_registration.swift_message:
+        class: "%example_user_registration.swift_message.class%"
+
+    example_user_registration.user_activation_usecase:
+        class: "%example_user_registration.user_activation_usecase.class%"
+        arguments:
+            - "@example_user_registration.entity_manager"
+
     example_user_registration.user_registration_controller:
         class: "%example_user_registration.user_registration_controller.class%"
         calls:
@@ -21,3 +44,18 @@ services:
             - [setConversationContext, ["@phpmentors_pageflower.conversation_context"]]
         tags:
             - { name: phpmentors_pageflower.pageflow }
+
+    example_user_registration.user_registration_usecase:
+        class: "%example_user_registration.user_registration_usecase.class%"
+        arguments:
+            - "@example_user_registration.entity_manager"
+            - "@example_user_registration.password_encoder"
+            - "@security.secure_random"
+            - "@example_user_registration.user_transfer"
+
+    example_user_registration.user_transfer:
+        class: "%example_user_registration.user_transfer.class%"
+        arguments:
+            - "@mailer"
+            - "@example_user_registration.swift_message"
+            - "@twig"
