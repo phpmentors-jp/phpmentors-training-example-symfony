@@ -18,6 +18,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Example\UserRegistrationBundle\Entity\Factory\UserFactory;
+use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
+
 class UserRegistrationController extends Controller
 {
     /**
@@ -43,8 +46,16 @@ class UserRegistrationController extends Controller
      */
     public function inputAction()
     {
+        if (!$this->get('session')->has('user')) {
+            $userFactory = new UserFactory();
+            $user = $userFactory->create();
+            $this->get('session')->set('user', $user);
+        } else {
+            $user = $this->get('session')->get('user');
+        }
+
         return $this->render(self::$VIEW_INPUT, array(
-            'form' => $this->createFormBuilder()->getForm()->createView(),
+            'form' => $this->createForm(new UserRegistrationType(), $user)->createView(),
         ));
     }
 
@@ -57,7 +68,7 @@ class UserRegistrationController extends Controller
      */
     public function inputPostAction(Request $request)
     {
-        $form = $this->createFormBuilder()->getForm();
+        $form = $this->createForm(new UserRegistrationType(), $this->get('session')->get('user'));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -67,5 +78,57 @@ class UserRegistrationController extends Controller
                 'form' => $form->createView(),
             ));
         }
+    }
+
+    /**
+     * @return Response
+     *
+     * @Route("/users/registration/confirmation")
+     * @Method("GET")
+     */
+    public function confirmationAction()
+    {
+        return $this->render(self::$VIEW_CONFIRMATION, array(
+            'form' => $this->createFormBuilder()->getForm()->createView(),
+            'user' => $this->get('session')->get('user'),
+        ));
+    }
+
+    /**
+     * @param  Request  $request
+     * @return Response
+     *
+     * @Route("/users/registration/confirmation")
+     * @Method("POST")
+     */
+    public function confirmationPostAction(Request $request)
+    {
+        $form = $this->createFormBuilder()->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            if ($request->request->has('prev')) {
+                return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
+            }
+
+            $this->get('session')->remove('user');
+
+            return $this->redirect($this->generateUrl('example_userregistration_userregistration_success', array(), true));
+        } else {
+            return $this->render(self::$VIEW_CONFIRMATION, array(
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @return Response
+     *
+     * @Route("/users/registration/success")
+     * @Method("GET")
+     */
+    public function successAction()
+    {
+        return $this->render(self::$VIEW_SUCCESS);
     }
 }
