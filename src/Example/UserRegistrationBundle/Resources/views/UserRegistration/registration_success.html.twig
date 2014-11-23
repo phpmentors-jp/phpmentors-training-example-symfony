@@ -9,6 +9,16 @@
  # distribution, and is available at http://opensource.org/licenses/BSD-2-Clause
  #}
 
+{% extends "ExampleUserRegistrationBundle:UserRegistration:layout.html.twig" %}
+
+{% block title %}{{ parent() }}登録完了{% endblock %}
+
+{% block content %}
 <h2>登録完了</h2>
 
-<p>ユーザー登録が完了いたしました。ユーザーアカウントの有効化手続きのご案内についてメールを送信いたします。</p>
+<div class="well">
+  <div class="container-fluid">
+    <p>ユーザー登録が完了いたしました。ユーザーアカウントの有効化手続きのご案内についてメールを送信いたします。</p>
+  </div>
+</div>
+{% endblock %}
