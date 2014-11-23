@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4f6605c72fa5981ccb7ce91f4daaec9c",
+    "hash": "942e4ab2ec1e225801f8111b3655f775",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2084,16 +2084,16 @@
         },
         {
             "name": "piece/stagehand-componentfactory",
-            "version": "v1.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/piece/stagehand-componentfactory.git",
-                "reference": "d38890fa8a9a813f5f4c39471654a9de3ca0291c"
+                "reference": "ac67866daa9fbba4e8110c47d3f447bd5b79bd73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piece/stagehand-componentfactory/zipball/d38890fa8a9a813f5f4c39471654a9de3ca0291c",
-                "reference": "d38890fa8a9a813f5f4c39471654a9de3ca0291c",
+                "url": "https://api.github.com/repos/piece/stagehand-componentfactory/zipball/ac67866daa9fbba4e8110c47d3f447bd5b79bd73",
+                "reference": "ac67866daa9fbba4e8110c47d3f447bd5b79bd73",
                 "shasum": ""
             },
             "require": {
@@ -2127,7 +2127,7 @@
             "keywords": [
                 "dependency injection"
             ],
-            "time": "2012-05-03 08:23:21"
+            "time": "2013-12-11 08:05:00"
         },
         {
             "name": "piece/stagehand-testrunner",
@@ -2517,7 +2517,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "phpmentors/domain-kata": 20,
-        "piece/stagehand-testrunner": 20
+        "piece/stagehand-testrunner": 20,
+        "piece/stagehand-componentfactory": 20
     },
     "prefer-stable": false,
     "platform": {

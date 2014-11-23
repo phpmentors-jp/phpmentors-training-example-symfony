@@ -24,7 +24,8 @@
         "sensio/generator-bundle": "~2.3",
         "phpunit/phpunit": "4.3.*",
         "piece/stagehand-testrunner": "~4.1@dev",
-        "phake/phake": "1.*"
+        "phake/phake": "1.*",
+        "piece/stagehand-componentfactory": ">=1.1.0@dev"
     },
     "scripts": {
         "post-root-package-install": [
