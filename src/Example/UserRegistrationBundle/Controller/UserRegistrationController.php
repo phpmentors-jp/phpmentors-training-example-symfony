@@ -41,6 +41,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+use Example\UserRegistrationBundle\Entity\Factory\UserFactory;
+use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
+
 /**
  * @package    PHPMentors_Training_Example_Symfony
  * @copyright  2012-2013 KUBO Atsuhiro <kubo@iteman.jp>
@@ -72,8 +75,16 @@ class UserRegistrationController extends Controller
      */
     public function inputAction()
     {
+        if (!$this->get('session')->has('user')) {
+            $userFactory = new UserFactory();
+            $user = $userFactory->create();
+            $this->get('session')->set('user', $user);
+        } else {
+            $user = $this->get('session')->get('user');
+        }
+
         return $this->render(self::$VIEW_INPUT, array(
-            'form' => $this->createFormBuilder()->getForm()->createView(),
+            'form' => $this->createForm(new UserRegistrationType(), $user)->createView(),
         ));
     }
 
@@ -86,13 +97,13 @@ class UserRegistrationController extends Controller
      */
     public function inputPostAction(Request $request)
     {
-        $form = $this->createFormBuilder()->getForm();
+        $form = $this->createForm(new UserRegistrationType(), $this->get('session')->get('user'));
         $form->submit($request);
         if ($form->isValid()) {
             return $this->redirect($this->generateUrl('example_userregistration_userregistration_confirmation', array(), true));
         } else {
             return $this->render(self::$VIEW_INPUT, array(
-                'form' => $form->createView(),
+                'form' => $form->createView()
             ));
         }
     }
@@ -107,6 +118,7 @@ class UserRegistrationController extends Controller
     {
         return $this->render(self::$VIEW_CONFIRMATION, array(
             'form' => $this->createFormBuilder()->getForm()->createView(),
+            'user' => $this->get('session')->get('user'),
         ));
     }
 
@@ -125,6 +137,8 @@ class UserRegistrationController extends Controller
             if ($request->request->has('prev')) {
                 return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
             }
+
+            $this->get('session')->remove('user');
 
             return $this->redirect($this->generateUrl('example_userregistration_userregistration_success', array(), true));
         } else {
