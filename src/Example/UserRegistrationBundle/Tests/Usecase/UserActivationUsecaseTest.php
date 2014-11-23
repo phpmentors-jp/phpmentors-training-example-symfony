@@ -14,9 +14,9 @@ namespace Example\UserRegistrationBundle\Tests\Usecase;
 
 use Example\UserRegistrationBundle\Entity\ActivationKey;
 use Example\UserRegistrationBundle\Entity\User;
-use Example\UserRegistrationBundle\Usecase\UserActivationUsecase;
+use Example\UserRegistrationBundle\Tests\Test\ComponentAwareTestCase;
 
-class UserActivationUsecaseTest extends \PHPUnit_Framework_TestCase
+class UserActivationUsecaseTest extends ComponentAwareTestCase
 {
     /**
      * @test
@@ -31,8 +31,9 @@ class UserActivationUsecaseTest extends \PHPUnit_Framework_TestCase
         \Phake::when($userRepository)->findOneByActivationKey($this->anything())->thenReturn($user);
         $entityManager = \Phake::mock('Doctrine\ORM\EntityManagerInterface');
         \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
-        $userActivationUsecase = new UserActivationUsecase($entityManager);
-        $userActivationUsecase->run(new ActivationKey($activationKey));
+        $this->setComponent('example_user_registration.entity_manager', $entityManager);
+
+        $this->createComponent('example_user_registration.user_activation_usecase')->run(new ActivationKey($activationKey));
 
         $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
         $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));
