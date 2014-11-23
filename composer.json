@@ -24,6 +24,7 @@
     "require-dev": {
         "phake/phake": "~1.0",
         "phpunit/phpunit": "~4.0",
+        "piece/stagehand-componentfactory": ">=1.1.0@dev",
         "piece/stagehand-testrunner": ">=4.0.1",
         "sensio/generator-bundle": "~2.3"
     },
