@@ -19,7 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Example\UserRegistrationBundle\Entity\ActivationKey;
 use Example\UserRegistrationBundle\Entity\Factory\UserFactory;
-use Example\UserRegistrationBundle\Transfer\UserTransfer;
 use Example\UserRegistrationBundle\Usecase\UserActivationUsecase;
 use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 

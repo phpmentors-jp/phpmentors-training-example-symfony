@@ -21,8 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Example\UserRegistrationBundle\Entity\Factory\UserFactory;
 use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
-use Example\UserRegistrationBundle\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 class UserRegistrationController extends Controller
 {
