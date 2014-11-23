@@ -18,6 +18,7 @@ use PHPMentors\DomainKata\Entity\EntityInterface;
 use PHPMentors\DomainKata\Usecase\CommandUsecaseInterface;
 
 use Example\UserRegistrationBundle\Entity\User;
+use Example\UserRegistrationBundle\Transfer\UserTransfer;
 
 class UserRegistrationUsecase implements CommandUsecaseInterface
 {
@@ -37,20 +38,27 @@ class UserRegistrationUsecase implements CommandUsecaseInterface
     protected $secureRandom;
 
     /**
+     * @var \Example\UserRegistrationBundle\Transfer\UserTransfer
+     */
+    protected $userTransfer;
+
+    /**
      * @param \Doctrine\ORM\EntityManager                                       $entityManager
      * @param \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $passwordEncoder
      * @param \Symfony\Component\Security\Core\Util\SecureRandomInterface       $secureRandom
+     * @param \Example\UserRegistrationBundle\Transfer\UserTransfer             $userTransfer
      */
-    public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom)
+    public function __construct(EntityManager $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom, UserTransfer $userTransfer)
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->secureRandom = $secureRandom;
+        $this->userTransfer = $userTransfer;
     }
 
     /**
      * @param  \PHPMentors\DomainKata\Entity\EntityInterface $user
-     * @return mixed
+     * @throws \UnexpectedValueException
      */
     public function run(EntityInterface $user)
     {
@@ -60,5 +68,10 @@ class UserRegistrationUsecase implements CommandUsecaseInterface
 
         $this->entityManager->getRepository('Example\UserRegistrationBundle\Entity\User')->add($user);
         $this->entityManager->flush();
+
+        $emailSent = $this->userTransfer->sendActivationEmail($user);
+        if (!$emailSent) {
+            throw new \UnexpectedValueException('アクティベーションメールの送信に失敗しました。');
+        }
     }
 }

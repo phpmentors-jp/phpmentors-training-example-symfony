@@ -36,7 +36,10 @@ class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
         $secureRandom = \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface');
         \Phake::when($secureRandom)->nextBytes($this->anything())->thenReturn($activationKey);
 
-        $userRegistrationUsecase = new UserRegistrationUsecase($entityManager, $passwordEncoder, $secureRandom);
+        $userTransfer = \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer');
+        \Phake::when($userTransfer)->sendActivationEmail($this->anything())->thenReturn(true);
+
+        $userRegistrationUsecase = new UserRegistrationUsecase($entityManager, $passwordEncoder, $secureRandom, $userTransfer);
         $userRegistrationUsecase->run($user);
 
         \Phake::verify($secureRandom)->nextBytes($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_INT));
@@ -47,5 +50,6 @@ class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($user)->setRegistrationDate($this->isInstanceOf('DateTime'));
         \Phake::verify($userRepository)->add($this->identicalTo($user));
         \Phake::verify($entityManager)->flush();
+        \Phake::verify($userTransfer)->sendActivationEmail($this->identicalTo($user));
     }
 }
