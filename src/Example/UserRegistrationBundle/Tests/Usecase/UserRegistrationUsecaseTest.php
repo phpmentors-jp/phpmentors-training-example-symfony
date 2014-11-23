@@ -11,6 +11,7 @@
 
 namespace Example\UserRegistrationBundle\Tests\Usecase;
 
+use Example\UserRegistrationBundle\Entity\User;
 use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
@@ -51,5 +52,33 @@ class UserRegistrationUsecaseTest extends \PHPUnit_Framework_TestCase
         \Phake::verify($userRepository)->add($this->identicalTo($user));
         \Phake::verify($entityManager)->flush();
         \Phake::verify($userTransfer)->sendActivationEmail($this->identicalTo($user));
+    }
+
+    /**
+     * @test
+     */
+    public function ユーザーを有効にする()
+    {
+        $activationKey = 'ACTIVATION_KEY';
+        $user = new User();
+        $user->setActivationKey($activationKey);
+        $userClass = get_class($user);
+        $userRepository = \Phake::mock('Example\UserRegistrationBundle\Repository\UserRepository');
+        \Phake::when($userRepository)->findOneByActivationKey($this->anything())->thenReturn($user);
+        $entityManager = \Phake::mock('Doctrine\ORM\EntityManager');
+        \Phake::when($entityManager)->getRepository($userClass)->thenReturn($userRepository);
+        $userRegistrationUsecase = new UserRegistrationUsecase(
+            $entityManager,
+            \Phake::mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface'),
+            \Phake::mock('Symfony\Component\Security\Core\Util\SecureRandomInterface'),
+            \Phake::mock('Example\UserRegistrationBundle\Transfer\UserTransfer')
+        );
+        $userRegistrationUsecase->activate($activationKey);
+
+        $this->assertThat($user->getActivationDate(), $this->logicalNot($this->equalTo(null)));
+        $this->assertThat($user->getActivationDate(), $this->isInstanceOf('DateTime'));
+
+        \Phake::verify($userRepository)->findOneByActivationKey($this->equalTo($activationKey));
+        \Phake::verify($entityManager)->flush();
     }
 }
