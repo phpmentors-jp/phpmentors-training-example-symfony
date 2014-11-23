@@ -16,9 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-use Example\UserRegistrationBundle\Transfer\UserTransfer;
-use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
-
 class UserActivationController extends Controller
 {
     /**
@@ -40,21 +37,8 @@ class UserActivationController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $this->createUserRegistrationUsecase()->activate($request->query->get('key'));
+        $this->get('example_user_registration.user_registration_usecase')->activate($request->query->get('key'));
 
         return $this->render(self::$VIEW_SUCCESS);
-    }
-
-    /**
-     * @return \Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase
-     */
-    protected function createUserRegistrationUsecase()
-    {
-        return new UserRegistrationUsecase(
-            $this->get('doctrine')->getManager(),
-            $this->get('security.encoder_factory')->getEncoder('Example\UserRegistrationBundle\Entity\User'),
-            $this->get('security.secure_random'),
-            new UserTransfer($this->get('mailer'), new \Swift_Message(), $this->get('twig'))
-        );
     }
 }
