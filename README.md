@@ -1,5 +1,7 @@
 # Symfony2 ベースのユーザー登録サンプル
 
+[![Build Status](https://travis-ci.org/kumamidori/phpmentors/phpmentors-training-example-symfony.svg?branch=master)](https://travis-ci.org/phpmentors-jp/phpmentors-training-example-symfony)
+
 このサンプルはドメイン駆動設計 (DDD: Domain-Driven Design) に基づいた、PHP アプリケーションフレームワーク [Symfony](http://symfony.com/) ベースのユーザー登録アプリケーションです。
 
 本アプリケーションはドメイン駆動設計を適用した開発スタイル「[PHPメンターズ流 設計と実装の型](http://phpmentors.jp/post/38871698851/kata-0-php)」の実践例となっています。[Kataシリーズ](http://phpmentors.jp/tagged/kata) と合わせてご活用ください。
