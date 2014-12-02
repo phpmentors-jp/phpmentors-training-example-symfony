@@ -13,6 +13,7 @@
 
 namespace Example\UserRegistrationBundle\Controller;
 
+use PHPMentors\DomainKata\Usecase\UsecaseInterface;
 use PHPMentors\PageflowerBundle\Annotation\Accept;
 use PHPMentors\PageflowerBundle\Annotation\EndPage;
 use PHPMentors\PageflowerBundle\Annotation\Init;
@@ -31,6 +32,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Example\UserRegistrationBundle\Entity\User;
 use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
+use Example\UserRegistrationBundle\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 /**
  * @Route("/users/registration", service="example_user_registration.user_registration_controller")
@@ -171,6 +174,7 @@ class UserRegistrationController extends Controller implements ConversationalCon
             }
 
             if ($form->get('next')->isClicked()) {
+                $this->createUserRegistrationUsecase()->run($this->user);
                 $this->conversationContext->getConversation()->transition('success');
 
                 return $this->render(self::VIEW_SUCCESS);
@@ -182,5 +186,18 @@ class UserRegistrationController extends Controller implements ConversationalCon
         return $this->render(self::VIEW_CONFIRMATION, array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @return UsecaseInterface
+     */
+    private function createUserRegistrationUsecase()
+    {
+        return new UserRegistrationUsecase(
+            $this->get('doctrine')->getEntityManager(),
+            $this->get('security.encoder_factory')->getEncoder('Example\UserRegistrationBundle\Entity\User'),
+            $this->get('security.secure_random'),
+            new UserTransfer($this->get('mailer'), new \Swift_Message(), $this->get('twig'))
+        );
     }
 }
