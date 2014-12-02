@@ -1,6 +1,7 @@
 <?php
 /*
  * Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
+ *               2014 YAMANE Nana <shigematsu.nana@gmail.com>,
  * All rights reserved.
  *
  * This file is part of PHPMentors_Training_Example_Symfony.
@@ -20,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Example\UserRegistrationBundle\Entity\Factory\UserFactory;
 use Example\UserRegistrationBundle\Form\Type\UserRegistrationType;
+use Example\UserRegistrationBundle\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 class UserRegistrationController extends Controller
 {
@@ -110,6 +113,7 @@ class UserRegistrationController extends Controller
             if ($request->request->has('prev')) {
                 return $this->redirect($this->generateUrl('example_userregistration_userregistration_input', array(), true));
             }
+            $this->createUserRegistrationUsecase()->run($this->get('session')->get('user'));
 
             $this->get('session')->remove('user');
 
@@ -130,5 +134,18 @@ class UserRegistrationController extends Controller
     public function successAction()
     {
         return $this->render(self::$VIEW_SUCCESS);
+    }
+
+    /**
+     * @return \Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase
+     */
+    protected function createUserRegistrationUsecase()
+    {
+        return new UserRegistrationUsecase(
+            $this->get('doctrine')->getEntityManager(),
+            $this->get('security.encoder_factory')->getEncoder('Example\UserRegistrationBundle\Entity\User'),
+            $this->get('security.secure_random'),
+            new UserTransfer($this->get('mailer'), new \Swift_Message(), $this->get('twig'))
+        );
     }
 }

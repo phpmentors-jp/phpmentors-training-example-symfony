@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2012 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2012-2014 KUBO Atsuhiro <kubo@iteman.jp>,
  *               2014 YAMANE Nana <shigematsu.nana@gmail.com>,
  * All rights reserved.
  *
@@ -13,12 +13,15 @@
 
 namespace Example\UserRegistrationBundle\Controller;
 
+use PHPMentors\DomainKata\Usecase\UsecaseInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use Example\UserRegistrationBundle\Entity\ActivationKey;
 
 class UserActivationController extends Controller
 {
@@ -41,6 +44,16 @@ class UserActivationController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $this->createUserActivationUsecase()->run(new ActivationKey($request->query->get('key')));
+
         return $this->render(self::$VIEW_SUCCESS);
+    }
+
+    /**
+     * @return UsecaseInterface
+     */
+    protected function createUserActivationUsecase()
+    {
+        return new UserActivationUsecase($this->get('doctrine')->getManager());
     }
 }
