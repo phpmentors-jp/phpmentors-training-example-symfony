@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Util\SecureRandomInterface;
 
 use Example\UserRegistrationBundle\Entity\User;
+use Example\UserRegistrationBundle\Transfer\UserTransfer;
 
 class UserRegistrationUsecase implements CommandUsecaseInterface
 {
@@ -39,21 +40,29 @@ class UserRegistrationUsecase implements CommandUsecaseInterface
     protected $secureRandom;
 
     /**
+     * @var UserTransfer
+     */
+    protected $userTransfer;
+
+    /**
      * @param EntityManagerInterface   $entityManager
      * @param PasswordEncoderInterface $passwordEncoder
      * @param SecureRandomInterface    $secureRandom
+     * @param UserTransfer             $userTransfer
      */
-    public function __construct(EntityManagerInterface $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom)
+    public function __construct(EntityManagerInterface $entityManager, PasswordEncoderInterface $passwordEncoder, SecureRandomInterface $secureRandom, UserTransfer $userTransfer)
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->secureRandom = $secureRandom;
+        $this->userTransfer = $userTransfer;
     }
 
     /**
      * {@inheritDoc}
      *
      * @return void
+     * @throws \UnexpectedValueException
      */
     public function run(EntityInterface $user)
     {
@@ -63,5 +72,10 @@ class UserRegistrationUsecase implements CommandUsecaseInterface
 
         $this->entityManager->getRepository('Example\UserRegistrationBundle\Entity\User')->add($user);
         $this->entityManager->flush();
+
+        $emailSent = $this->userTransfer->sendActivationEmail($user);
+        if (!$emailSent) {
+            throw new \UnexpectedValueException('アクティベーションメールの送信に失敗しました。');
+        }
     }
 }
