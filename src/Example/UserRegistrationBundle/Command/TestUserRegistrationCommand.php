@@ -17,8 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Example\UserRegistrationBundle\Entity\ActivationKey;
 use Example\UserRegistrationBundle\Entity\User;
 use Example\UserRegistrationBundle\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Usecase\UserActivationUsecase;
 use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 class TestUserRegistrationCommand extends ContainerAwareCommand
@@ -48,6 +50,11 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
             )
         );
         $userRegistrationUsecase->run($user);
+
+        $this->getContainer()->get('doctrine')->getManager()->detach($user);
+
+        $userActivationUsecase = new UserActivationUsecase($this->getContainer()->get('doctrine')->getManager());
+        $userActivationUsecase->run(new ActivationKey($user->getActivationKey()));
 
         return 0;
     }
