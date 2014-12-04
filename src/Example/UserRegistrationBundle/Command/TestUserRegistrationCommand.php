@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2012-2013 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2012-2014 KUBO Atsuhiro <kubo@iteman.jp>,
  *               2014 YAMANE Nana <shigematsu.nana@gmail.com>,
  * All rights reserved.
  *
@@ -17,8 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Example\UserRegistrationBundle\Entity\ActivationKey;
 use Example\UserRegistrationBundle\Entity\Factory\UserFactory;
 use Example\UserRegistrationBundle\Transfer\UserTransfer;
+use Example\UserRegistrationBundle\Usecase\UserActivationUsecase;
 use Example\UserRegistrationBundle\Usecase\UserRegistrationUsecase;
 
 class TestUserRegistrationCommand extends ContainerAwareCommand
@@ -49,6 +51,11 @@ class TestUserRegistrationCommand extends ContainerAwareCommand
             )
         );
         $userRegistrationUsecase->run($user);
+
+        $this->getContainer()->get('doctrine')->getManager()->detach($user);
+
+        $userActivationUsecase = new UserActivationUsecase($this->getContainer()->get('doctrine')->getManager());
+        $userActivationUsecase->run(new ActivationKey($user->getActivationKey()));
 
         return 0;
     }
