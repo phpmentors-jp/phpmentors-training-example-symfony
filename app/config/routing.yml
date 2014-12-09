@@ -1,3 +1,4 @@
-app:
-    resource: @AppBundle/Controller/
+example_user_registration:
+    resource: "@ExampleUserRegistrationBundle/Controller/"
     type:     annotation
+    prefix:   /
