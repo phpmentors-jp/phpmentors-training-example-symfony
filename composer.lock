@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "006d4d69631ecb37206c1d50f0cb3c24",
+    "hash": "d77911742ebb4239f3ccaa39a404f22b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1012,6 +1012,108 @@
                 "modeling"
             ],
             "time": "2014-11-07 04:55:56"
+        },
+        {
+            "name": "phpmentors/pageflower-bundle",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpmentors-jp/pageflower-bundle.git",
+                "reference": "a0d445d147f0f4a39553cd9817df346f92bc8c12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpmentors-jp/pageflower-bundle/zipball/a0d445d147f0f4a39553cd9817df346f92bc8c12",
+                "reference": "a0d445d147f0f4a39553cd9817df346f92bc8c12",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "~1.0",
+                "php": ">=5.3.3",
+                "phpmentors/domain-kata": "~1.0",
+                "piece/stagehand-fsm": "~2.1",
+                "symfony/config": "~2.3",
+                "symfony/console": "~2.3",
+                "symfony/dependency-injection": "~2.3",
+                "symfony/form": "~2.3",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/http-foundation": "~2.3",
+                "symfony/http-kernel": "~2.3",
+                "symfony/routing": "~2.3",
+                "symfony/security": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "PHPMentors\\PageflowerBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "KUBO Atsuhiro",
+                    "email": "kubo@iteman.jp"
+                }
+            ],
+            "description": "A pageflow engine for Symfony applications",
+            "keywords": [
+                "conversation",
+                "flow",
+                "pageflow",
+                "stateful",
+                "symfony"
+            ],
+            "time": "2014-10-06 01:17:23"
+        },
+        {
+            "name": "piece/stagehand-fsm",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piece/stagehand-fsm.git",
+                "reference": "01734d3d11d840488797a1a82fa9c2acc4921de2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/piece/stagehand-fsm/zipball/01734d3d11d840488797a1a82fa9c2acc4921de2",
+                "reference": "01734d3d11d840488797a1a82fa9c2acc4921de2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": "~2.3"
+            },
+            "require-dev": {
+                "phake/phake": "~1.0",
+                "phpunit/phpunit": "~4.0",
+                "piece/stagehand-testrunner": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stagehand\\FSM\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "KUBO Atsuhiro",
+                    "email": "kubo@iteman.jp"
+                }
+            ],
+            "description": "A finite state machine",
+            "homepage": "https://github.com/piece/stagehand-fsm/wiki",
+            "keywords": [
+                "fsm",
+                "state machine"
+            ],
+            "time": "2014-10-05 05:56:38"
         },
         {
             "name": "psr/log",
